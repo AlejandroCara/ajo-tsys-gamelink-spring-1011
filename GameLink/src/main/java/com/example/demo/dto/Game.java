@@ -3,24 +3,15 @@
  */
 package com.example.demo.dto;
 
-import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gamelink.demo.dto.GameGameRole;
-import com.gamelink.demo.dto.Party;
-
 import jakarta.persistence.Column;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
-/**
- * 
- */
+@Entity
+@Table(name = "game")
 public class Game {
 
 	@Id
@@ -36,18 +27,6 @@ public class Game {
 
 	@Column(nullable = false, length = 50)
 	private String url;
-
-	@OneToMany
-	@JoinColumn(name = "id")
-	private List<Event> event;
-
-	@OneToMany
-	@JoinColumn(name = "id")
-	private List<Party> party;
-
-	@ManyToOne
-	@JoinColumn(name = "id")
-	private GameGameRole gameGameRole;
 
 	/** Default constructor. */
 	public Game() {
@@ -119,52 +98,6 @@ public class Game {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	/**
-	 * @return the event
-	 */
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "Event")
-	public List<Event> getEvent() {
-		return event;
-	}
-
-	/**
-	 * @param event the event to set
-	 */
-	public void setEvent(List<Event> event) {
-		this.event = event;
-	}
-
-	/**
-	 * @return the party
-	 */
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "Party")
-	public List<Party> getParty() {
-		return party;
-	}
-
-	/**
-	 * @param party the party to set
-	 */
-	public void setParty(List<Party> party) {
-		this.party = party;
-	}
-
-	/**
-	 * @return the gameGameRole
-	 */
-	public GameGameRole getGameGameRole() {
-		return gameGameRole;
-	}
-
-	/**
-	 * @param gameGameRole the gameGameRole to set
-	 */
-	public void setGameGameRole(GameGameRole gameGameRole) {
-		this.gameGameRole = gameGameRole;
 	}
 
 }

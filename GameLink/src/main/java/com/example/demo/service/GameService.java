@@ -11,10 +11,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.IGameDAO;
 import com.example.demo.dto.Game;
 
-/**
- * 
- */
-
 @Service
 public class GameService implements IGameService {
 

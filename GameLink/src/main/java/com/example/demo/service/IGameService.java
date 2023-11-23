@@ -7,9 +7,6 @@ import java.util.List;
 
 import com.example.demo.dto.Game;
 
-/**
- * 
- */
 public interface IGameService {
 
 	// Metodos del CRUD
