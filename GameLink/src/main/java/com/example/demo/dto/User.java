@@ -35,6 +35,11 @@ public class User {
 	@JsonIgnore
 	private List<Event> event;
 	
+	@OneToMany
+	@JoinColumn(name = "id_user")
+	@JsonIgnore
+	private List<UserPartyGameRole> userPartyGameRoles;
+	
 	public User() {
 		
 	}
@@ -86,5 +91,21 @@ public class User {
 
 	public void setRole(Role role) {
 		this.role = role;
+	}
+
+	public List<Event> getEvent() {
+		return event;
+	}
+
+	public void setEvent(List<Event> event) {
+		this.event = event;
+	}
+
+	public List<UserPartyGameRole> getUserPartyGameRoles() {
+		return userPartyGameRoles;
+	}
+
+	public void setUserPartyGameRoles(List<UserPartyGameRole> userPartyGameRoles) {
+		this.userPartyGameRoles = userPartyGameRoles;
 	}
 }
