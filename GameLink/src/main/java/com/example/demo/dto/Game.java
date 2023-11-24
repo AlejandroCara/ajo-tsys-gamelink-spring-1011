@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +39,10 @@ public class Game {
 	@JoinColumn(name = "id")
 	@JsonIgnore
 	private List<Event> event;
+	
+	@OneToMany
+	@JoinColumn(name = "id")
+	private List<Party> party;
 
 	/** 
 	 *  
@@ -111,6 +116,22 @@ public class Game {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	
+	/**
+	 * @return the party
+	 */
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "Party")
+	public List<Party> getParty() {
+		return party;
+	}
+	
+	/**
+	 * @param party the party to set
+	 */
+	public void setParty(List<Party> party) {
+		this.party = party;
 	}
 
 }
