@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -38,6 +40,10 @@ public class Party {
 	@JoinColumn(name = "id_party")
 	@JsonIgnore
 	private List<UserPartyGameRole> userPartyGameRoles;
+
+	@ManyToMany(mappedBy = "party")
+	@JsonIgnoreProperties("party")
+	private List<Tag> tag;
 	
 	public Party() {
 		
@@ -108,5 +114,14 @@ public class Party {
 	public void setUserPartyGameRoles(List<UserPartyGameRole> userPartyGameRoles) {
 		this.userPartyGameRoles = userPartyGameRoles;
 	}
+
+	public List<Tag> getTag() {
+		return tag;
+	}
+
+	public void setTag(List<Tag> tag) {
+		this.tag = tag;
+	}
+	
 }
 
