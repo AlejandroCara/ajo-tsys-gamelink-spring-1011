@@ -1,5 +1,9 @@
 package com.example.demo.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +33,11 @@ public class Party {
 	@ManyToOne
 	@JoinColumn(name = "id_user")
 	private User owner;
+	
+	@OneToMany
+	@JoinColumn(name = "id_party")
+	@JsonIgnore
+	private List<UserPartyGameRole> userPartyGameRoles;
 	
 	public Party() {
 		
@@ -90,4 +100,13 @@ public class Party {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
+
+	public List<UserPartyGameRole> getUserPartyGameRoles() {
+		return userPartyGameRoles;
+	}
+
+	public void setUserPartyGameRoles(List<UserPartyGameRole> userPartyGameRoles) {
+		this.userPartyGameRoles = userPartyGameRoles;
+	}
 }
+
