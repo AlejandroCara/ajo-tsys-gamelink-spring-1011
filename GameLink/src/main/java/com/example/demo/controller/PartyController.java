@@ -37,11 +37,18 @@ public class PartyController {
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
 
-	@GetMapping("/all/{idGame}")
+	@GetMapping("/all/game/{idGame}")
 	public ResponseEntity<List<Party>> listAllPartiesByGame(@PathVariable(name = "idGame") int idGame,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Page<Party> partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
 		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+
+		return new ResponseEntity<>(parties, HttpStatus.OK);
+	}
+	
+	@GetMapping("/all/user/{idUser}")
+	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser) {
+		List<Party> parties = partyService.getAllByUser(idUser);
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}

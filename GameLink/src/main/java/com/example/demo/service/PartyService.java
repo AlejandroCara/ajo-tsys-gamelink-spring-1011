@@ -23,13 +23,22 @@ public class PartyService implements IPartyService {
 	
 	@Override
 	public Page<Party> getPaginatedAllParty(Pageable pageable) {
-		// TODO Auto-generated method stub
 		return iPartyDAO.findAll(pageable);
+	}
+	
+	@Override
+	public List<Party> getAllByGame(int idGame) {
+		return iPartyDAO.findByGameId(idGame);
 	}
 	
 	@Override
 	public Page<Party> getPaginatedAllFindByGame(Pageable pageable, int idGame) {
 		return iPartyDAO.findByGameId(idGame, pageable);
+	}
+
+	@Override
+	public List<Party> getAllByUser(int idUser) {
+		return iPartyDAO.findByOwnerId(idUser);
 	}
 
 	@Override

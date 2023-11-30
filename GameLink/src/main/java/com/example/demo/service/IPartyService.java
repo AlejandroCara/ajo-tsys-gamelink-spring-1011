@@ -13,8 +13,12 @@ public interface IPartyService {
 	public List<Party> getAll();
 
 	public Page<Party> getPaginatedAllParty(Pageable pageable);
-
+	
+	public List<Party> getAllByGame(int idGame);
+	
 	public Page<Party> getPaginatedAllFindByGame(Pageable pageable, int idGame);
+	
+	public List<Party> getAllByUser(int idUser);
 
 	public Party add(Party party);
 
