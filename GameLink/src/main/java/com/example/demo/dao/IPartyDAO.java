@@ -8,9 +8,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.dto.Party;
 
-public interface IPartyDAO extends JpaRepository<Party, Integer>{
+public interface IPartyDAO extends JpaRepository<Party, Integer> {
 
 	List<Party> findByGameId(int idGame);
 
+	List<Party> findByOwnerId(int idUser);
+
 	Page<Party> findByGameId(int idGame, Pageable pageable);
+
 }
