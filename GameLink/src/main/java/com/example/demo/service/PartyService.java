@@ -3,20 +3,27 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IPartyDAO;
 import com.example.demo.dto.Party;
 
 @Service
-public class PartyService implements IPartyService{
-	
+public class PartyService implements IPartyService {
+
 	@Autowired(required = true)
 	IPartyDAO iPartyDAO;
 
 	@Override
 	public List<Party> getAll() {
 		return iPartyDAO.findAll();
+	}
+	
+	@Override
+	public Page<Party> getPaginatedAllFindByGame(Pageable pageable, int idGame) {
+		return iPartyDAO.findByGameId(idGame, pageable);
 	}
 
 	@Override
@@ -38,4 +45,5 @@ public class PartyService implements IPartyService{
 	public void deleteOne(int id) {
 		iPartyDAO.deleteById(id);
 	}
+
 }
