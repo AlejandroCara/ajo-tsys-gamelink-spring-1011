@@ -47,8 +47,10 @@ public class PartyController {
 	}
 	
 	@GetMapping("/all/user/{idUser}")
-	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser) {
-		List<Party> parties = partyService.getAllByUser(idUser);
+	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+		Page<Party> partyPage = partyService.getPaginateAllByUser(PageRequest.of(page, size), idUser);
+		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
@@ -86,7 +88,13 @@ public class PartyController {
 	}
 
 	private Party convertToDTO(Party party) {
-		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
-				party.getOwner());
+		return new Party(
+				party.getId(), 
+				party.getName(), 
+				party.getMaxPlayers(), 
+				party.getDescription(), 
+				party.getGame(),
+				party.getOwner(),
+				party.getTag());
 	}
 }

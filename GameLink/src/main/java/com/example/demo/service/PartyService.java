@@ -40,6 +40,11 @@ public class PartyService implements IPartyService {
 	public List<Party> getAllByUser(int idUser) {
 		return iPartyDAO.findByOwnerId(idUser);
 	}
+	
+	@Override
+	public Page<Party> getPaginateAllByUser(Pageable pageable, int idUser) {
+		return iPartyDAO.findByOwnerId(idUser, pageable);
+	}
 
 	@Override
 	public Party add(Party party) {
