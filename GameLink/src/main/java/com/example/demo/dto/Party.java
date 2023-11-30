@@ -17,9 +17,9 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="party")
+@Table(name = "party")
 public class Party {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
@@ -27,15 +27,15 @@ public class Party {
 	@Column(name = "max_players")
 	private int maxPlayers;
 	private String description;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_game")
 	private Game game;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_user")
 	private User owner;
-	
+
 	@OneToMany
 	@JoinColumn(name = "id_party")
 	@JsonIgnore
@@ -44,9 +44,9 @@ public class Party {
 	@ManyToMany(mappedBy = "party")
 	@JsonIgnoreProperties("party")
 	private List<Tag> tag;
-	
+
 	public Party() {
-		
+
 	}
 
 	public Party(int id, String name, int maxPlayers, String description, Game game, User owner) {
@@ -57,6 +57,17 @@ public class Party {
 		this.description = description;
 		this.game = game;
 		this.owner = owner;
+	}
+
+	public Party(int id, String name, int maxPlayers, String description, Game game, User owner, List<Tag> tag) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.maxPlayers = maxPlayers;
+		this.description = description;
+		this.game = game;
+		this.owner = owner;
+		this.tag = tag;
 	}
 
 	public int getId() {
@@ -122,6 +133,5 @@ public class Party {
 	public void setTag(List<Tag> tag) {
 		this.tag = tag;
 	}
-	
-}
 
+}
