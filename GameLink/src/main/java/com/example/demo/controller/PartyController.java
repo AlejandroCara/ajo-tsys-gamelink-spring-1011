@@ -1,8 +1,13 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.Party;
@@ -26,6 +32,17 @@ public class PartyController {
 	public List<Party> listAllParties() {
 		return partyService.getAll();
 	}
+	
+	@GetMapping("/all/{idGame}")
+	public ResponseEntity<List<Party>> listAllPartiesByGame(@PathVariable(name = "idGame") int idGame,  @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+		Page<Party> partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
+		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+		
+		return new ResponseEntity<>(parties, HttpStatus.OK);
+	}
+	
+
 
 	@PostMapping("/add")
 	public Party saveParty(@RequestBody Party party) {
@@ -58,4 +75,15 @@ public class PartyController {
 	public void deleteParty(@PathVariable(name = "id") int id) {
 		partyService.deleteOne(id);
 	}
+	
+    private Party convertToDTO(Party party) {
+        return new Party(
+        		party.getId(),
+        		party.getName(),
+        		party.getMaxPlayers(),
+        		party.getDescription(),
+        		party.getGame(),
+        		party.getOwner()
+        );
+    }
 }
