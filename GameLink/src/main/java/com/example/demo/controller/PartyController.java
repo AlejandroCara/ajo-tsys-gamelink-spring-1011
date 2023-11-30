@@ -24,25 +24,27 @@ import com.example.demo.service.PartyService;
 @RestController
 @RequestMapping("/party")
 public class PartyController {
-	
+
 	@Autowired(required = true)
 	PartyService partyService;
-	
+
 	@GetMapping("/all")
-	public List<Party> listAllParties() {
-		return partyService.getAll();
-	}
-	
-	@GetMapping("/all/{idGame}")
-	public ResponseEntity<List<Party>> listAllPartiesByGame(@PathVariable(name = "idGame") int idGame,  @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-		Page<Party> partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
+	public ResponseEntity<List<Party>> listAllParties(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Page<Party> partyPage = partyService.getPaginatedAllParty(PageRequest.of(page, size));
 		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-		
+
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
-	
 
+	@GetMapping("/all/{idGame}")
+	public ResponseEntity<List<Party>> listAllPartiesByGame(@PathVariable(name = "idGame") int idGame,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+		Page<Party> partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
+		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+
+		return new ResponseEntity<>(parties, HttpStatus.OK);
+	}
 
 	@PostMapping("/add")
 	public Party saveParty(@RequestBody Party party) {
@@ -75,15 +77,9 @@ public class PartyController {
 	public void deleteParty(@PathVariable(name = "id") int id) {
 		partyService.deleteOne(id);
 	}
-	
-    private Party convertToDTO(Party party) {
-        return new Party(
-        		party.getId(),
-        		party.getName(),
-        		party.getMaxPlayers(),
-        		party.getDescription(),
-        		party.getGame(),
-        		party.getOwner()
-        );
-    }
+
+	private Party convertToDTO(Party party) {
+		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
+				party.getOwner());
+	}
 }

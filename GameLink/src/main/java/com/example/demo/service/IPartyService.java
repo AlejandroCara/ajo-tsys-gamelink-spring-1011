@@ -11,8 +11,10 @@ public interface IPartyService {
 
 	// Metodos del CRUD
 	public List<Party> getAll();
-	
-	Page<Party> getPaginatedAllFindByGame(Pageable pageable, int idGame);
+
+	public Page<Party> getPaginatedAllParty(Pageable pageable);
+
+	public Page<Party> getPaginatedAllFindByGame(Pageable pageable, int idGame);
 
 	public Party add(Party party);
 
