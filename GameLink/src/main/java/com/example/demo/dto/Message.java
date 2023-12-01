@@ -34,7 +34,7 @@ public class Message {
 
 	@ManyToOne
 	@JoinColumn(name = "id_party", nullable = false)
-	private Party idParty;
+	private Party party;
 
 	public Message() {
 		
@@ -46,7 +46,7 @@ public class Message {
 		this.created_at = created_at;
 		this.updated_at = updated_at;
 		this.author = author;
-		this.idParty = idParty;
+		this.party = idParty;
 	}
 
 	public int getId() {
@@ -90,11 +90,11 @@ public class Message {
 	}
 
 	public Party getIdParty() {
-		return idParty;
+		return party;
 	}
 
 	public void setIdParty(Party idParty) {
-		this.idParty = idParty;
+		this.party = idParty;
 	}
 	
 }
