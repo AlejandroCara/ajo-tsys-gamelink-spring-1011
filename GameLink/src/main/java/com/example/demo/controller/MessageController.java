@@ -1,8 +1,13 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.Message;
@@ -23,8 +29,25 @@ public class MessageController {
 	MessageService messageService;
 
 	@GetMapping("/all")
-	public List<Message> listAllMessages() {
-		return messageService.getAll();
+	public ResponseEntity<List<Message>> listAllMessages(
+			@RequestParam(name = "idParty", required = false) Integer idParty,
+			@RequestParam(name = "idUser", required = false) Integer idUser, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+		Page<Message> messagePage = null;
+
+		if (idParty != null && idUser != null) {
+
+		} else if (idParty != null) {
+			messagePage = messageService.findByParty(PageRequest.of(page, size), idParty);
+		} else if (idUser != null) {
+			
+		} else {
+			
+		}
+
+		List<Message> messages = messagePage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+
+		return new ResponseEntity<>(messages, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -59,6 +82,11 @@ public class MessageController {
 	@DeleteMapping("/{id}")
 	public void deleteMessage(@PathVariable(name = "id") int id) {
 		messageService.deleteOne(id);
+	}
+
+	private Message convertToDTO(Message message) {
+		return new Message(message.getId(), message.getMessage(), message.getCreated_at(), message.getUpdated_at(),
+				message.getAuthor(), message.getIdParty());
 	}
 
 }

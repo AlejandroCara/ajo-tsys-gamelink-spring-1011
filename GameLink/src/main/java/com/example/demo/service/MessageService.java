@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IMessageDAO;
@@ -17,6 +19,11 @@ public class MessageService implements IMessageService {
 	@Override
 	public List<Message> getAll() {
 		return iMessageDAO.findAll();
+	}
+	
+	@Override
+	public Page<Message> findByParty(Pageable pageable, int idParty) {
+		return iMessageDAO.findByPartyId(idParty, pageable);
 	}
 
 	@Override
