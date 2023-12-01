@@ -17,5 +17,7 @@ public interface IPartyDAO extends JpaRepository<Party, Integer> {
 	List<Party> findByOwnerId(int idUser);
 	
 	Page<Party> findByOwnerId(int idUser, Pageable pageable);
+	
+	List<Party> findByTagIdIn(List<Integer> idTags);
 
 }
