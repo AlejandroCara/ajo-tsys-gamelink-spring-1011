@@ -45,7 +45,7 @@ public class GameService implements IGameService {
 	}
 
 	@Override
-	public Page<Game> getPaginatedUsers(Pageable pageable) {
+	public Page<Game> getPaginatedGames(Pageable pageable) {
 		return iGameDAO.findAll(pageable);
 	}
 

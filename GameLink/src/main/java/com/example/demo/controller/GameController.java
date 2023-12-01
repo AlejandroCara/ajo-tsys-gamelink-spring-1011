@@ -34,7 +34,7 @@ public class GameController {
 	@GetMapping("/all")
 	public ResponseEntity<List<Game>> listAllGames(@RequestParam(defaultValue = "0") int page,
 													@RequestParam(defaultValue = "10") int size) {
-		Page<Game> departamentoPage = gameService.getPaginatedUsers(PageRequest.of(page, size));
+		Page<Game> departamentoPage = gameService.getPaginatedGames(PageRequest.of(page, size));
 		List<Game> departamentoDTOs = departamentoPage.getContent().stream()
 				.collect(Collectors.toList());
 
