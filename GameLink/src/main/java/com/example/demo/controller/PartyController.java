@@ -45,7 +45,7 @@ public class PartyController {
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/all/user/{idUser}")
 	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -54,10 +54,13 @@ public class PartyController {
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/all/filter")
-	public ResponseEntity<List<Party>> listAllPartiesByUser(@RequestParam (name = "idTag", required = false) List<Integer> idTag) {
-		List<Party> parties = partyService.getAllByTags(idTag);
+	public ResponseEntity<List<Party>> listAllPartiesByUser(
+			@RequestParam(name = "idTag", required = false) List<Integer> idTag,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
+		Page<Party> partyPage = partyService.getPaginateAllByTags(PageRequest.of(page, size), idTag);
+		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
@@ -95,13 +98,7 @@ public class PartyController {
 	}
 
 	private Party convertToDTO(Party party) {
-		return new Party(
-				party.getId(), 
-				party.getName(), 
-				party.getMaxPlayers(), 
-				party.getDescription(), 
-				party.getGame(),
-				party.getOwner(),
-				party.getTag());
+		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
+				party.getOwner(), party.getTag());
 	}
 }
