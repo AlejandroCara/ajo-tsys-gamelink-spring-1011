@@ -39,4 +39,9 @@ public class EventService implements IEventService {
 		iEventDAO.deleteById(id);
 	}
 
+	@Override
+	public List<Event> findByGameId(int idGame) {
+		return iEventDAO.findByGameId(idGame);
+	}
+
 }

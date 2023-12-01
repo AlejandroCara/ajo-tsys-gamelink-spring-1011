@@ -16,5 +16,6 @@ public interface IEventService {
 	public Event update(Event event);
 
 	public void deleteOne(int id);
-
+	
+	public List<Event> findByGameId(int idGame);
 }
