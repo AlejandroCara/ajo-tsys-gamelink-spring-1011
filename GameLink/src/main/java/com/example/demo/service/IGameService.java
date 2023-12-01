@@ -23,5 +23,5 @@ public interface IGameService {
 
 	public void deleteOne(int id);
 
-	Page<Game> getPaginatedUsers(Pageable pageable);
+	Page<Game> getPaginatedGames(Pageable pageable);
 }
