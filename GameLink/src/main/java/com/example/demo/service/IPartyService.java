@@ -24,6 +24,8 @@ public interface IPartyService {
 	
 	public List<Party> getAllByTags(List<Integer> idTags);
 
+	public Page<Party> getPaginateAllByTags(Pageable pageable, List<Integer> idTags);
+	
 	public Party add(Party party);
 
 	public Party getOne(int id);
