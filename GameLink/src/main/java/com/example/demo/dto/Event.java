@@ -37,7 +37,7 @@ public class Event {
 
 	@ManyToOne
 	@JoinColumn(name = "id_game", nullable = false)
-	private Game idGame;
+	private Game game;
 
 	@ManyToOne
 	@JoinColumn(name = "id_user", nullable = false)
@@ -65,7 +65,7 @@ public class Event {
 		this.status = status;
 		this.start = start;
 		this.end = end;
-		this.idGame = idGame;
+		this.game = idGame;
 		this.idUser = idUser;
 	}
 
@@ -157,14 +157,14 @@ public class Event {
 	 * @return the idGame
 	 */
 	public Game getIdGame() {
-		return idGame;
+		return game;
 	}
 
 	/**
 	 * @param idGame the idGame to set
 	 */
 	public void setIdGame(Game idGame) {
-		this.idGame = idGame;
+		this.game = idGame;
 	}
 
 	/**

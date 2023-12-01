@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.Event;
@@ -23,8 +24,17 @@ public class EventController {
 	EventService eventService;
 
 	@GetMapping("/all")
-	public List<Event> listAllEvents() {
-		return eventService.getAll();
+	public List<Event> listAllEvents(@RequestParam(required = false) Integer idGame) {
+		
+		List<Event> result;
+		
+		if (idGame != null) {
+			result = eventService.findByGameId(idGame);
+		} else {
+			result = eventService.getAll();
+		}
+		
+		return result;
 	}
 
 	@PostMapping("/add")
