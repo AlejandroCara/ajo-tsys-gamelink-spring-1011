@@ -21,8 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.User;
 import com.example.demo.service.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
 
 	@Autowired(required = true)
@@ -32,7 +35,7 @@ public class UserController {
 	@GetMapping("/all")
 	public ResponseEntity<List<User>> listAllUsers(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
-
+		System.out.println("LLEGA");
 		Page<User> departamentoPage = userService.getPaginatedUsers(PageRequest.of(page, size));
 		List<User> departamentoDTOs = departamentoPage.getContent().stream().map(this::convertToDTO)
 				.collect(Collectors.toList());
@@ -45,18 +48,23 @@ public class UserController {
 		return userService.add(user);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public User getOneUser(@PathVariable(name = "id") int id) {
-		return userService.getOne(id);
+		return userService.getOneById(id);
 	}
-
+	
+	@GetMapping("/{userName}")
+	public User getByUserName(@PathVariable(name = "userName") String userName) {
+		return userService.getOne(userName);
+	}
+	
 	@PutMapping("/{id}")
 	public User updateRole(@PathVariable(name = "id") int id, @RequestBody User user) {
 
 		User preUser = new User();
 		User newUser = new User();
 
-		preUser = userService.getOne(id);
+		preUser = userService.getOneById(id);
 
 		preUser.setUserName(user.getUserName());
 		preUser.setEmail(user.getEmail());
