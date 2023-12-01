@@ -29,18 +29,22 @@ public class PartyController {
 	PartyService partyService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Party>> listAllParties(@RequestParam(defaultValue = "0") int page,
-			@RequestParam(defaultValue = "10") int size) {
-		Page<Party> partyPage = partyService.getPaginatedAllParty(PageRequest.of(page, size));
-		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(parties, HttpStatus.OK);
-	}
-
-	@GetMapping("/all/game/{idGame}")
-	public ResponseEntity<List<Party>> listAllPartiesByGame(@PathVariable(name = "idGame") int idGame,
+	public ResponseEntity<List<Party>> listAllParties(@RequestParam(name = "idGame", required = false) Integer idGame,
+			@RequestParam(name = "idTag", required = false) List<Integer> idTag,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-		Page<Party> partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
+		
+		Page<Party> partyPage = null;
+
+		if (idGame != null && idTag != null) {
+			partyPage = partyService.getPaginateAllByGameAndByTags(PageRequest.of(page, size), idGame, idTag);
+		} else if (idGame != null) {
+			partyPage = partyService.getPaginatedAllFindByGame(PageRequest.of(page, size), idGame);
+		} else if (idTag != null) {
+			partyPage = partyService.getPaginateAllByTags(PageRequest.of(page, size), idTag);
+		} else {
+			partyPage = partyService.getPaginatedAllParty(PageRequest.of(page, size));
+		}
+
 		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
@@ -50,16 +54,6 @@ public class PartyController {
 	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Page<Party> partyPage = partyService.getPaginateAllByUser(PageRequest.of(page, size), idUser);
-		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(parties, HttpStatus.OK);
-	}
-
-	@GetMapping("/all/filter")
-	public ResponseEntity<List<Party>> listAllPartiesByUser(
-			@RequestParam(name = "idTag", required = false) List<Integer> idTag,
-			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "1") int size) {
-		Page<Party> partyPage = partyService.getPaginateAllByTags(PageRequest.of(page, size), idTag);
 		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
