@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.demo.dto.User;
 
 public interface IUserService {
@@ -17,4 +20,5 @@ public interface IUserService {
 
 	public void deleteOne(int id);
 	
+	Page<User> getPaginatedUsers(Pageable pageable);
 }
