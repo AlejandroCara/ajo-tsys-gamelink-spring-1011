@@ -54,6 +54,13 @@ public class PartyController {
 
 		return new ResponseEntity<>(parties, HttpStatus.OK);
 	}
+	
+	@GetMapping("/all/filter")
+	public ResponseEntity<List<Party>> listAllPartiesByUser(@RequestParam (name = "idTag", required = false) List<Integer> idTag) {
+		List<Party> parties = partyService.getAllByTags(idTag);
+
+		return new ResponseEntity<>(parties, HttpStatus.OK);
+	}
 
 	@PostMapping("/add")
 	public Party saveParty(@RequestBody Party party) {
