@@ -10,5 +10,7 @@ public interface IMessageDAO extends JpaRepository<Message, Integer>{
 
 	Page<Message> findByPartyId(int idParty, Pageable pageable);
 	
+	Page<Message> findByAuthorId(int idAuthor, Pageable pageable);
+	
 }
 

@@ -38,9 +38,9 @@ public class MessageController {
 		if (idParty != null && idUser != null) {
 
 		} else if (idParty != null) {
-			messagePage = messageService.findByParty(PageRequest.of(page, size), idParty);
+			messagePage = messageService.getPaginatedAllParty(PageRequest.of(page, size), idParty);
 		} else if (idUser != null) {
-			
+			messagePage = messageService.getPaginatedAllAuthor(PageRequest.of(page, size), idUser);
 		} else {
 			
 		}

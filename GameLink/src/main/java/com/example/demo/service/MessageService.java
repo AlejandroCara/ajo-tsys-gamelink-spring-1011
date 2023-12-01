@@ -22,8 +22,13 @@ public class MessageService implements IMessageService {
 	}
 	
 	@Override
-	public Page<Message> findByParty(Pageable pageable, int idParty) {
+	public Page<Message> getPaginatedAllParty(Pageable pageable, int idParty) {
 		return iMessageDAO.findByPartyId(idParty, pageable);
+	}
+	
+	@Override
+	public Page<Message> getPaginatedAllAuthor(Pageable pageable, int idAuthor) {
+		return iMessageDAO.findByAuthorId(idAuthor, pageable);
 	}
 
 	@Override

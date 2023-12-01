@@ -12,7 +12,9 @@ public interface IMessageService {
 	// Metodos del CRUD
 	public List<Message> getAll();
 	
-	public Page<Message> findByParty(Pageable pageable, int idParty);
+	public Page<Message> getPaginatedAllParty(Pageable pageable, int idParty);
+	
+	public Page<Message> getPaginatedAllAuthor(Pageable pageable, int idAuthor);
 
 	public Message add(Message message);
 
