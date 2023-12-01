@@ -5,6 +5,9 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.demo.dto.Game;
 
 public interface IGameService {
@@ -20,4 +23,5 @@ public interface IGameService {
 
 	public void deleteOne(int id);
 
+	Page<Game> getPaginatedUsers(Pageable pageable);
 }
