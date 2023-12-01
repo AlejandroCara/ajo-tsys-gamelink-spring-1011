@@ -36,13 +36,13 @@ public class MessageController {
 		Page<Message> messagePage = null;
 
 		if (idParty != null && idUser != null) {
-
+			messagePage = messageService.getPaginatedAllPartyAndAuthor(PageRequest.of(page, size), idParty, idUser);
 		} else if (idParty != null) {
 			messagePage = messageService.getPaginatedAllParty(PageRequest.of(page, size), idParty);
 		} else if (idUser != null) {
 			messagePage = messageService.getPaginatedAllAuthor(PageRequest.of(page, size), idUser);
 		} else {
-			
+			messagePage = messageService.getPaginatedAllMessage(PageRequest.of(page, size));
 		}
 
 		List<Message> messages = messagePage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());

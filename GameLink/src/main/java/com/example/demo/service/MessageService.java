@@ -22,6 +22,11 @@ public class MessageService implements IMessageService {
 	}
 	
 	@Override
+	public Page<Message> getPaginatedAllMessage(Pageable pageable) {
+		return iMessageDAO.findAll(pageable);
+	}
+	
+	@Override
 	public Page<Message> getPaginatedAllParty(Pageable pageable, int idParty) {
 		return iMessageDAO.findByPartyId(idParty, pageable);
 	}
@@ -29,6 +34,11 @@ public class MessageService implements IMessageService {
 	@Override
 	public Page<Message> getPaginatedAllAuthor(Pageable pageable, int idAuthor) {
 		return iMessageDAO.findByAuthorId(idAuthor, pageable);
+	}
+	
+	@Override
+	public Page<Message> getPaginatedAllPartyAndAuthor(Pageable pageable, int idParty, int idAuthor) {
+		return iMessageDAO.findByPartyIdAndAuthorId(idParty, idAuthor, pageable);
 	}
 
 	@Override
