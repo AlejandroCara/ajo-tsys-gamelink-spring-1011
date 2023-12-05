@@ -61,4 +61,9 @@ public class UserService implements IUserService{
 		return iUserDAO.findAll(pageable);
 	}
 
+	@Override
+	public User getOneByEmail(String email) {
+		return iUserDAO.findByEmail(email).get();
+	}
+
 }

@@ -15,6 +15,8 @@ public interface IUserService {
 	public User add(User user);
 
 	public User getOne(String userName);
+	
+	public User getOneByEmail(String email);
 
 	public User getOneById(int id);
 

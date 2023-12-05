@@ -9,4 +9,6 @@ import com.example.demo.dto.User;
 public interface IUserDAO extends JpaRepository<User, Integer>{
 
 	Optional<User> findByUserName(String userName);
+
+	Optional<User> findByEmail(String email);
 }

@@ -27,7 +27,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JWTService jwtService;
 	
 	@Autowired(required = true)
-    private GameLinkUserDetailsService libraryUserDetailsService;
+    private GameLinkUserDetailsService gameLinkUserDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -41,7 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             userName = jwtService.extractUsernameFromToken(token);
         }
         if (userName != null & SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = libraryUserDetailsService.loadUserByUsername(userName);
+            UserDetails userDetails = gameLinkUserDetailsService.loadUserByUsername(userName);
             if(jwtService.validateToken(token, userDetails)) {
                 var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

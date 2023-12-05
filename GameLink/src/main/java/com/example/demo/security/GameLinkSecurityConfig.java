@@ -19,14 +19,16 @@ import com.example.demo.jwt.JWTAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class GameLinkSecurityConfig {
 
-    private static final String[] SECURED_ADMIN_URLs = {"/user/**"};
+    private static final String[] SECURED_ADMIN_URLs = {"/party/all"};
     private static final String[] SECURED_USER_URLs = {"/game/all"};
     private static final String[] SECURED_EVENT_MANAGER_URLs = {"/event/**"};
 
     private static final String[] UN_SECURED_URLs = {
-            "/login/**"
+            "/login/**",
+            "/user/add",
+            "/user/test"
     };
 
     @Autowired(required = true)

@@ -18,7 +18,7 @@ import lombok.Data;
 public class GameLinkUserDetails implements UserDetails {
 
     private String userName;
-    private String password;
+    private String password; 
     private List<GrantedAuthority> authorities;
 
     public GameLinkUserDetails(User user) {
@@ -28,7 +28,7 @@ public class GameLinkUserDetails implements UserDetails {
                 .split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        System.out.println("Loged as role: " + user.getRole().getName());
+        System.out.println(authorities);
     }
 
     @Override
