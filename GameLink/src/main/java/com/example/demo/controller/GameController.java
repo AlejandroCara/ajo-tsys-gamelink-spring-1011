@@ -59,9 +59,9 @@ public class GameController {
 
 		prevGame = gameService.getOne(id);
 
-		prevGame.setTitle(prevGame.getTitle());
-		prevGame.setThumbnailUrl(prevGame.getThumbnailUrl());
-		prevGame.setUrl(prevGame.getUrl());
+		prevGame.setTitle(game.getTitle());
+		prevGame.setThumbnailUrl(game.getThumbnailUrl());
+		prevGame.setUrl(game.getUrl());
 
 		newGame = gameService.update(prevGame);
 
