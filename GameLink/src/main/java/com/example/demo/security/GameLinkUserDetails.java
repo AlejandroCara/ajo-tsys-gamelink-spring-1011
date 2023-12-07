@@ -28,7 +28,6 @@ public class GameLinkUserDetails implements UserDetails {
                 .split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        System.out.println(authorities);
     }
 
     @Override

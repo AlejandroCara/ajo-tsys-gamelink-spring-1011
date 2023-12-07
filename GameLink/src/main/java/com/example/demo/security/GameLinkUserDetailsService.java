@@ -17,7 +17,7 @@ public class GameLinkUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUserName(username)
+        return userRepository.findByEmail(username)
                 .map(GameLinkUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("No user found"));
     }
