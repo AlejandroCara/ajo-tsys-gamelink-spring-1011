@@ -14,11 +14,16 @@ public interface IUserService {
 
 	public User add(User user);
 
-	public User getOne(int id);
+	public User getOne(String userName);
+	
+	public User getOneByEmail(String email);
+
+	public User getOneById(int id);
 
 	public User update(User user);
 
 	public void deleteOne(int id);
 	
 	Page<User> getPaginatedUsers(Pageable pageable);
+
 }
