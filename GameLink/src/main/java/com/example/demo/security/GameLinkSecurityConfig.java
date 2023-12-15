@@ -21,12 +21,35 @@ import com.example.demo.jwt.JWTAuthenticationFilter;
 @EnableWebSecurity
 public class GameLinkSecurityConfig {
 
-	private static final String[] SECURED_ADMIN_URLs = { "/game/**", "/user/**", "/tag/**", "/game_role/**","/gameGameRole/**"};
-	private static final String[] SECURED_USER_URLs = { "/game/all", "/party/**", "/message/**", "/user/id/{id}", "/user/{id}", "/event/all",
-			"/user_party_game_role/{id}" };
+	private static final String[] SECURED_ADMIN_URLs = { 
+														"/game/**", 
+														"/user/**", 
+														"/tag/**", 
+														"party/**",
+														"/message/**",
+														"/game_role/**",
+														"/gameGameRole/**",
+														"/user_party_game_role/**",
+														"/swagger-ui/**"};
+	
+	private static final String[] SECURED_USER_URLs = { 
+														"/user/profile",
+														"/user/update",
+														"/game/all", 
+														"/party/all",
+														"/party/join/**",
+														"/party/leave/**",
+														"/party/add", 
+														"/party/own", 
+														"/party/own/update/**",
+														"/party/own/delete/**", 
+														"/message/party/**",
+														"/message/party/write/**",
+														"/event/all"};
+	
 	private static final String[] SECURED_EVENT_MANAGER_URLs = { "/event/**" };
 
-	private static final String[] UN_SECURED_URLs = { "/login/**", "/user/add", "/user/test" };
+	private static final String[] UN_SECURED_URLs = { "/login/**", "/user/add" };
 
 	@Autowired(required = true)
 	private JWTAuthenticationFilter authenticationFilter;
@@ -52,7 +75,7 @@ public class GameLinkSecurityConfig {
 		return http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth.requestMatchers(UN_SECURED_URLs).permitAll()
 						.requestMatchers(SECURED_USER_URLs).hasAnyAuthority("USER", "ADMIN","EVENT_MANAGER")
-						.requestMatchers(SECURED_EVENT_MANAGER_URLs).hasAuthority("EVENT_MANAGER")
+						.requestMatchers(SECURED_EVENT_MANAGER_URLs).hasAnyAuthority("ADMIN", "EVENT_MANAGER")
 						.requestMatchers(SECURED_ADMIN_URLs).hasAuthority("ADMIN").anyRequest().authenticated())
 				.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authenticationProvider(authenticationProvider())
