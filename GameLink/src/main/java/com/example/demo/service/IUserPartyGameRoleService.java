@@ -16,5 +16,7 @@ public interface IUserPartyGameRoleService {
 	public UserPartyGameRole update(UserPartyGameRole userPartyGameRole);
 
 	public void deleteOne(int id);
+	
+	public List<UserPartyGameRole> findByPartyId(int idParty);
 
 }
