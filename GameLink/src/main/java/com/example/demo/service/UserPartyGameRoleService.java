@@ -38,4 +38,9 @@ public class UserPartyGameRoleService implements IUserPartyGameRoleService{
 	public void deleteOne(int id) {
 		iUserPartyGameRoleServiceDAO.deleteById(id);
 	}
+
+	@Override
+	public List<UserPartyGameRole> findByPartyId(int idParty) {
+		return iUserPartyGameRoleServiceDAO.findByPartyId(idParty);
+	}
 }

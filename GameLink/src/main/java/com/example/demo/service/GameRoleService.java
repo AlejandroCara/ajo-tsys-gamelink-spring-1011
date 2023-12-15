@@ -3,6 +3,8 @@ package com.example.demo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IGameRoleDAO;
@@ -37,6 +39,11 @@ public class GameRoleService implements IGameRoleService{
 	@Override
 	public void deleteOne(int id) {
 		iGameRoleDAO.deleteById(id);
+	}
+
+	@Override
+	public Page<GameRole> getPaginatedGameRole(Pageable pageable) {
+		return iGameRoleDAO.findAll(pageable);
 	}
 
 }
