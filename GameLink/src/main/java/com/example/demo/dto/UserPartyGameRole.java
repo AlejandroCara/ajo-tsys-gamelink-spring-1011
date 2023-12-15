@@ -39,6 +39,13 @@ public class UserPartyGameRole {
 		this.party = party;
 		this.gameRole = gameRole;
 	}
+	
+	public UserPartyGameRole(User user, Party party, GameRole gameRole) {
+		super();
+		this.user = user;
+		this.party = party;
+		this.gameRole = gameRole;
+	}
 
 	public int getId() {
 		return id;

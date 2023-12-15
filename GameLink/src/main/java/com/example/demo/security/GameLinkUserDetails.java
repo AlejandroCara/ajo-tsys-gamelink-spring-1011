@@ -16,12 +16,14 @@ import lombok.Data;
 
 @Data
 public class GameLinkUserDetails implements UserDetails {
-
+	
+	private int id;
     private String userName;
     private String password; 
     private List<GrantedAuthority> authorities;
 
     public GameLinkUserDetails(User user) {
+    	id = user.getId();
         userName = user.getEmail();
         password = user.getPassword();
         authorities = Arrays.stream(user.getRole().getName()
@@ -63,5 +65,9 @@ public class GameLinkUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    
+    public int getId() {
+    	return this.id;
     }
 }

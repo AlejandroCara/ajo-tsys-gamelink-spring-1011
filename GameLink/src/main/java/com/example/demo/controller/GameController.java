@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.Game;
 import com.example.demo.service.GameService;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/game")
 public class GameController {
@@ -31,14 +33,19 @@ public class GameController {
 	@Autowired(required = true)
 	GameService gameService;
 
-	@GetMapping("/all")
-	public ResponseEntity<List<Game>> listAllGames(@RequestParam(defaultValue = "0") int page,
+	@GetMapping("/paged")
+	public ResponseEntity<List<Game>> listAllGamesPaginated(@RequestParam(defaultValue = "0") int page,
 													@RequestParam(defaultValue = "10") int size) {
 		Page<Game> departamentoPage = gameService.getPaginatedGames(PageRequest.of(page, size));
 		List<Game> departamentoDTOs = departamentoPage.getContent().stream()
 				.collect(Collectors.toList());
 
 		return new ResponseEntity<>(departamentoDTOs, HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	public List<Game> listAllGames() {
+		return gameService.getAll();
 	}
 
 	@PostMapping("/add")
