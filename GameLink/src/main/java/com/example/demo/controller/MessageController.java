@@ -98,7 +98,11 @@ public class MessageController {
 	}
 
 	@PostMapping("/add")
-	public Message saveMessage(@RequestBody Message message) {
+	public Message saveMessage(Authentication authentication, @RequestBody Message message) {
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		message.setCreated_at(new Date(System.currentTimeMillis()));
+		message.setUpdated_at(new Date(System.currentTimeMillis()));
+		message.setAuthor(userService.getOneById(ud.getId()));
 		return messageService.add(message);
 	}
 	
