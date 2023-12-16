@@ -40,6 +40,7 @@ public class GameLinkSecurityConfig {
 														"/user/update",
 														"/game/all", 
 														"/party/all",
+														"/party/id/**",
 														"/party/join/**",
 														"/party/leave/**",
 														"/party/add", 
