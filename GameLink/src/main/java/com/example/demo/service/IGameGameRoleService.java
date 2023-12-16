@@ -17,4 +17,7 @@ public interface IGameGameRoleService {
 
 	public void deleteOne(int id);
 
+	public GameGameRole findByIdGameRoleId(int idGameRole);
+	
+	public GameGameRole findByIdGameId(int idGame);
 }

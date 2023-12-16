@@ -18,7 +18,7 @@ import com.example.demo.service.GameGameRoleService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
-@RequestMapping("/gameGameRole")
+@RequestMapping("/game_game_role")
 public class GameGameRoleController {
 
 	@Autowired(required = true)
