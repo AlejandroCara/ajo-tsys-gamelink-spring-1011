@@ -149,7 +149,7 @@ public class PartyController {
 	}
 	
 	//Return a party with the same id passed by path variable
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public Party getOneParty(@PathVariable(name = "id") int id) {
 		return partyService.getOne(id);
 	}
