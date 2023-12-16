@@ -138,6 +138,19 @@ public class MessageController {
 	public Message getOneMessage(@PathVariable(name = "id") int id) {
 		return messageService.getOne(id);
 	}
+	
+	@GetMapping("/id/{id}")
+	public Message getOwnMessage(Authentication authentication, @PathVariable(name = "id") int id) {
+
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		Message msg =  messageService.getOne(id);
+		if(msg.getAuthor().getId() == ud.getId()) {
+			return msg;
+		} else {
+			return null;
+		}
+		
+	}
 
 	@PutMapping("/{id}")
 	public Message updateMessage(@PathVariable(name = "id") int id, @RequestBody Message message) {
