@@ -154,7 +154,7 @@ public class MessageController {
 
 	@PutMapping("/{id}")
 	public Message updateMessage(@PathVariable(name = "id") int id, @RequestBody Message message) {
-
+		
 		Message prevMessage = new Message();
 		Message newMessage = new Message();
 
@@ -162,7 +162,7 @@ public class MessageController {
 
 		prevMessage.setMessage(message.getMessage());
 		prevMessage.setCreated_at(message.getCreated_at());
-		prevMessage.setUpdated_at(message.getUpdated_at());
+		prevMessage.setUpdated_at(new Date(System.currentTimeMillis()));
 		prevMessage.setAuthor(message.getAuthor());
 		prevMessage.setIdParty(message.getIdParty());
 
@@ -170,10 +170,42 @@ public class MessageController {
 
 		return newMessage;
 	}
+	
+	@PutMapping("/update/{id}")
+	public Message updateOwnMessage(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody Message message) {
+
+		Message prevMessage = new Message();
+		Message newMessage = new Message();
+		
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		
+		prevMessage = messageService.getOne(id);
+
+		if (prevMessage.getAuthor().getId() == ud.getId()) {
+			prevMessage.setMessage(message.getMessage());
+			prevMessage.setCreated_at(message.getCreated_at());
+			prevMessage.setUpdated_at(new Date(System.currentTimeMillis()));
+			prevMessage.setAuthor(message.getAuthor());
+			prevMessage.setIdParty(message.getIdParty());
+
+			newMessage = messageService.update(prevMessage);
+		}
+		
+		return newMessage;
+	}
 
 	@DeleteMapping("/{id}")
 	public void deleteMessage(@PathVariable(name = "id") int id) {
 		messageService.deleteOne(id);
+	}
+	
+	@DeleteMapping("/delete/{id}")
+	public void deleteOwnMessage(Authentication authentication, @PathVariable(name = "id") int id) {
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		Message msg = messageService.getOne(id);
+		if (msg.getAuthor().getId() == ud.getId()) {
+			messageService.deleteOne(id);
+		}
 	}
 
 	private Message convertToDTO(Message message) {
