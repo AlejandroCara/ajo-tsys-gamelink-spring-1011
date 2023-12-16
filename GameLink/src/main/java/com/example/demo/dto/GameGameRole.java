@@ -25,7 +25,6 @@ public class GameGameRole {
 	@JoinColumn(name = "id_game_role")
 	private GameRole idGameRole;
 
-	@Column(nullable = false)
 	private int quantity;
 
 	public GameGameRole() {

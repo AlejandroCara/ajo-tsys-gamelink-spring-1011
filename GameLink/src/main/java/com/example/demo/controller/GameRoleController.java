@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.GameGameRole;
 import com.example.demo.dto.GameRole;
+import com.example.demo.service.GameGameRoleService;
 import com.example.demo.service.GameRoleService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -29,6 +32,9 @@ public class GameRoleController {
 	
 	@Autowired(required = true)
 	GameRoleService gameRoleService;
+	
+	@Autowired(required = true)
+	GameGameRoleService gameGameRoleService;
 	
 	@GetMapping("/all")
 	public ResponseEntity<List<GameRole>> listAllGameRoles(@RequestParam(defaultValue = "0") int page,

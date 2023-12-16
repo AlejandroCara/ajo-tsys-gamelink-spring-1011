@@ -39,4 +39,17 @@ public class GameGameRoleService implements IGameGameRoleService {
 		iGameGameRoleDAO.deleteById(id);
 	}
 
+	@Override
+	public GameGameRole findByIdGameRoleId(int idGameRole) {
+		return iGameGameRoleDAO.findByIdGameRoleId(idGameRole).get();
+	}
+
+	@Override
+	public GameGameRole findByIdGameId(int idGame) {
+		return iGameGameRoleDAO.findByIdGameId(idGame).get();
+	}
+
+
+
+
 }
