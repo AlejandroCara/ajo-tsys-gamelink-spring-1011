@@ -183,11 +183,7 @@ public class MessageController {
 
 		if (prevMessage.getAuthor().getId() == ud.getId()) {
 			prevMessage.setMessage(message.getMessage());
-			prevMessage.setCreated_at(message.getCreated_at());
 			prevMessage.setUpdated_at(new Date(System.currentTimeMillis()));
-			prevMessage.setAuthor(message.getAuthor());
-			prevMessage.setIdParty(message.getIdParty());
-
 			newMessage = messageService.update(prevMessage);
 		}
 		
