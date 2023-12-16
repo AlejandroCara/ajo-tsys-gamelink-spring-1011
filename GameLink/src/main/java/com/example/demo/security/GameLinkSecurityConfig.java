@@ -31,7 +31,7 @@ public class GameLinkSecurityConfig {
 														"party/**",
 														"/message/**",
 														"/game_role/**",
-														"/gameGameRole/**",
+														"/game_game_role/**",
 														"/user_party_game_role/**",
 														"/swagger-ui/**"};
 	
@@ -48,7 +48,8 @@ public class GameLinkSecurityConfig {
 														"/party/own/delete/**", 
 														"/message/party/**",
 														"/message/party/write/**",
-														"/event/all"};
+														"/event/all",
+														"/event/id/**"};
 	
 	private static final String[] SECURED_EVENT_MANAGER_URLs = { "/event/**" };
 
