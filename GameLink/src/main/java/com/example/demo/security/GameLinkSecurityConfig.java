@@ -28,7 +28,7 @@ public class GameLinkSecurityConfig {
 														"/game/**", 
 														"/user/**", 
 														"/tag/**", 
-														"party/**",
+														"/party/**",
 														"/message/**",
 														"/game_role/**",
 														"/game_game_role/**",
