@@ -53,7 +53,11 @@ public class GameLinkSecurityConfig {
 														"/message/update/**",
 														"/message/delete/**",
 														"/event/all",
-														"/event/id/**"};
+														"/event/id/**",
+														"/game_role/all",
+														"/game_role/id/**",
+														"/tag/all",
+														"/tag/id/**"};
 	
 	private static final String[] SECURED_EVENT_MANAGER_URLs = { "/event/**" };
 
