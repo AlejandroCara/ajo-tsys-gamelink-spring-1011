@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dao.IPartyDAO;
 import com.example.demo.dto.Party;
+import com.example.demo.dto.User;
+
+import jakarta.persistence.Tuple;
 
 @Service
 public class PartyService implements IPartyService {
@@ -80,5 +84,12 @@ public class PartyService implements IPartyService {
 	public void deleteOne(int id) {
 		iPartyDAO.deleteById(id);
 	}
+
+	@Override
+	public List<Tuple> getMembers(int idParty) {
+		return iPartyDAO.findUsersByPartyId(idParty);
+	}
+	
+
 
 }

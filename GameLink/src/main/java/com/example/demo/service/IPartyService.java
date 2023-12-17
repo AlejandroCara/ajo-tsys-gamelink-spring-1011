@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.example.demo.dto.Party;
+import com.example.demo.dto.User;
+
+import jakarta.persistence.Tuple;
 
 public interface IPartyService {
 
@@ -35,5 +38,6 @@ public interface IPartyService {
 	public Party update(Party party);
 
 	public void deleteOne(int id);
-
+	
+	public List<Tuple> getMembers(int idParty);
 }
