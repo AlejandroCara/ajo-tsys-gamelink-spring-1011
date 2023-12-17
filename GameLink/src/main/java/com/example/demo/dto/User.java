@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name="user")
 public class User {
@@ -23,6 +24,7 @@ public class User {
 	private int id;
 	@Column(name = "username")
 	private String userName;
+	@JsonIgnore
 	private String password;
 	private String email;
 	
@@ -45,6 +47,15 @@ public class User {
 	}
 
 	public User(int id, String userName, String password, String email, Role role) {
+		super();
+		this.id = id;
+		this.userName = userName;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+	}
+	
+	public User(int id, String userName, String password, String email) {
 		super();
 		this.id = id;
 		this.userName = userName;

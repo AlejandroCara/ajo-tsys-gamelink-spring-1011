@@ -211,9 +211,15 @@ public class PartyController {
 	public void deleteParty(Authentication authentication, @PathVariable(name = "id") int id) {
 			partyService.deleteOne(id);
 	}
+	
+	@GetMapping("/members/{id}")
+	public List<UserPartyGameRole> getMembers(@PathVariable(name = "id") int id) {	
+		return partyService.getOne(id).getUserPartyGameRoles();
+	}
 
 	private Party convertToDTO(Party party) {
 		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
 				party.getOwner(), party.getTag());
 	}
+
 }

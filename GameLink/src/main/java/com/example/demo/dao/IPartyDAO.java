@@ -23,5 +23,5 @@ public interface IPartyDAO extends JpaRepository<Party, Integer> {
 	Page<Party> findByTagIdIn(List<Integer> idTags, Pageable pageable);
 	
 	Page<Party> findByGameIdAndTagIdIn(int idGame, List<Integer> idTags, Pageable pageable);
-
+	
 }
