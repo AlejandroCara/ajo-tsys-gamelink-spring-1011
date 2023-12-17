@@ -37,10 +37,16 @@ public class GameRoleController {
 	GameGameRoleService gameGameRoleService;
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<GameRole>> listAllGameRoles(@RequestParam(defaultValue = "0") int page,
-														@RequestParam(defaultValue = "10") int size) {
+	public ResponseEntity<List<GameRole>> listAllGameRoles(@RequestParam(name = "idGame", required = false) Integer idGame,
+														   @RequestParam(defaultValue = "0") int page,
+														   @RequestParam(defaultValue = "10") int size) {
+
 		Page<GameRole> departamentoPage = gameRoleService.getPaginatedGameRole(PageRequest.of(page, size));
 		List<GameRole> departamentoDTOs = departamentoPage.getContent().stream().collect(Collectors.toList());
+		
+		if (idGame != null) {
+			departamentoDTOs = gameRoleService.findGameRoleByGameId(idGame);
+		}
 
 		return new ResponseEntity<>(departamentoDTOs, HttpStatus.OK);
 	}
@@ -50,7 +56,7 @@ public class GameRoleController {
 		return gameRoleService.add(gameRole);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public GameRole getOneGameRole(@PathVariable(name = "id") int id) {
 		return gameRoleService.getOne(id);
 	}

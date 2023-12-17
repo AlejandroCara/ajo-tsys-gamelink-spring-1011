@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.IGameRoleDAO;
 import com.example.demo.dto.GameRole;
 
+import jakarta.persistence.EntityManager;
+
 @Service
 public class GameRoleService implements IGameRoleService{
 
 	@Autowired(required = true)
 	IGameRoleDAO iGameRoleDAO;
+
 	
 	@Override
 	public List<GameRole> getAll() {
@@ -44,6 +47,11 @@ public class GameRoleService implements IGameRoleService{
 	@Override
 	public Page<GameRole> getPaginatedGameRole(Pageable pageable) {
 		return iGameRoleDAO.findAll(pageable);
+	}
+
+	@Override
+	public List<GameRole> findGameRoleByGameId(int idGame) {
+		return iGameRoleDAO.findGameRoleByGameId(idGame);
 	}
 
 }

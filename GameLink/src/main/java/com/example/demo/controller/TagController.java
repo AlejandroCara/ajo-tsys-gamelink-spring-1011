@@ -33,7 +33,7 @@ public class TagController {
 		return tagService.add(tag);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public Tag getOneTag(@PathVariable(name = "id") int id) {
 		return tagService.getOne(id);
 	}
