@@ -48,7 +48,6 @@ public class GameLinkSecurityConfig {
 														"/party/own/update/**",
 														"/party/own/delete/**", 
 														"/party/members/**",
-														"/party/members/roles/**",
 														"/message/party/**",
 														"/message/party/write/**",
 														"/message/id/**",

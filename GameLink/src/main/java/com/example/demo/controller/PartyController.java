@@ -30,8 +30,6 @@ import com.example.demo.service.PartyService;
 import com.example.demo.service.UserPartyGameRoleService;
 import com.example.demo.service.UserService;
 
-import jakarta.persistence.Tuple;
-
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/party")
@@ -214,16 +212,8 @@ public class PartyController {
 			partyService.deleteOne(id);
 	}
 	
-	//The logged user is added to the party passed by path variable if its not already in that party
 	@GetMapping("/members/{id}")
-	public List<User> getMembers(@PathVariable(name = "id") int id) {	
-		List<User> members = partyService.getMembers(id).stream().map(tuple -> convertToUserDTO(tuple)).collect(Collectors.toList());
-		return members;
-	}
-	
-	//The logged user is added to the party passed by path variable if its not already in that party
-	@GetMapping("/members/roles/{id}")
-	public List<UserPartyGameRole> getMembersRoles(@PathVariable(name = "id") int id) {		
+	public List<UserPartyGameRole> getMembers(@PathVariable(name = "id") int id) {	
 		return partyService.getOne(id).getUserPartyGameRoles();
 	}
 
@@ -231,8 +221,5 @@ public class PartyController {
 		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
 				party.getOwner(), party.getTag());
 	}
-	
-	private User convertToUserDTO(Tuple tuple) {
-		return new User(Integer.parseInt(tuple.get(0).toString()), tuple.get(1).toString(), tuple.get(2).toString(), tuple.get(3).toString());
-	}
+
 }

@@ -5,12 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.example.demo.dto.Party;
-import com.example.demo.dto.User;
-
-import jakarta.persistence.Tuple;
 
 public interface IPartyDAO extends JpaRepository<Party, Integer> {
 
@@ -28,9 +24,4 @@ public interface IPartyDAO extends JpaRepository<Party, Integer> {
 	
 	Page<Party> findByGameIdAndTagIdIn(int idGame, List<Integer> idTags, Pageable pageable);
 	
-	@Query(
-		value = "SELECT u.* "
-			  + "FROM user as u inner join user_party_game_role as upgr on  u.id = upgr.id_user "
-			  + "WHERE upgr.id_party = ?1", nativeQuery = true)
-	List<Tuple> findUsersByPartyId(int idParty);
 }
