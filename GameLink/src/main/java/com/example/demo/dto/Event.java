@@ -70,6 +70,28 @@ public class Event {
 	}
 
 	/**
+	 * @param id
+	 * @param name
+	 * @param description
+	 * @param status
+	 * @param start
+	 * @param end
+	 * @param game
+	 * @param idUser
+	 */
+	public Event(int id, String name, String description, String status, LocalDate start, LocalDate end, Game game,
+			User idUser) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.status = status;
+		this.start = start;
+		this.end = end;
+		this.game = game;
+		this.idUser = idUser;
+	}
+
+	/**
 	 * @return the id
 	 */
 	public int getId() {

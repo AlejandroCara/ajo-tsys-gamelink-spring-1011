@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.demo.dao.IGameRoleDAO;
 import com.example.demo.dto.GameRole;
 
-import jakarta.persistence.EntityManager;
-
 @Service
 public class GameRoleService implements IGameRoleService{
 
