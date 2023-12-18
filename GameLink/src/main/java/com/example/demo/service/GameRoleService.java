@@ -48,8 +48,8 @@ public class GameRoleService implements IGameRoleService{
 	}
 
 	@Override
-	public List<GameRole> findGameRoleByGameId(int idGame) {
-		return iGameRoleDAO.findGameRoleByGameId(idGame);
+	public Page<GameRole> findGameRoleByGameId(Pageable pageable,int idGame) {
+		return iGameRoleDAO.findGameRoleByGameId(pageable, idGame);
 	}
 
 }

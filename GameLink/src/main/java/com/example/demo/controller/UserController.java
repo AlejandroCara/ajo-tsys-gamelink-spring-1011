@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,23 +33,21 @@ public class UserController {
 
 	@Autowired(required = true)
 	UserService userService;
-	
+
 	@Autowired(required = true)
 	RoleService roleService;
-	
+
 	@Autowired(required = true)
-    private PasswordEncoder passwordEncoder;
-	
+	private PasswordEncoder passwordEncoder;
+
 	// GET /api/departamentos/all?page=0&size=10
 	@GetMapping("/all")
-	public ResponseEntity<List<User>> listAllUsers(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Page<User>> listAllUsers(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
-		
-		Page<User> departamentoPage = userService.getPaginatedUsers(PageRequest.of(page, size));
-		List<User> departamentoDTOs = departamentoPage.getContent().stream().map(this::convertToDTO)
-				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(departamentoDTOs, HttpStatus.OK);
+		Page<User> departamentoPage = userService.getPaginatedUsers(PageRequest.of(page, size));
+
+		return new ResponseEntity<>(departamentoPage, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -65,19 +60,19 @@ public class UserController {
 	public User getOneUser(@PathVariable(name = "id") int id) {
 		return userService.getOneById(id);
 	}
-	
+
 	@GetMapping("/profile")
 	public User getUserProfile(Authentication authentication) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		User user = userService.getOneById(ud.getId());
 		return user;
 	}
-	
+
 	@GetMapping("/user_name/{userName}")
 	public User getByUserName(@PathVariable(name = "userName") String userName) {
 		return userService.getOne(userName);
 	}
-	
+
 	@PutMapping("/{id}")
 	public User updateUser(@PathVariable(name = "id") int id, @RequestBody User user) {
 
@@ -95,7 +90,7 @@ public class UserController {
 
 		return newUser;
 	}
-	
+
 	@PutMapping("/update")
 	public ResponseEntity updateOwnUser(Authentication authentication, @RequestBody User user) {
 
@@ -104,7 +99,7 @@ public class UserController {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		preUser = userService.getOneById(ud.getId());
 		System.out.println(user.getId());
-		if(preUser.getId() == user.getId()) {
+		if (preUser.getId() == user.getId()) {
 			preUser.setUserName(user.getUserName());
 			preUser.setEmail(user.getEmail());
 			preUser.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -120,13 +115,10 @@ public class UserController {
 	public void deleteUser(@PathVariable(name = "id") int id) {
 		userService.deleteOne(id);
 	}
-	
-	@GetMapping("/email/{email}")
-    public User getByEmail(@PathVariable("email") String email){
-        return  userService.getOneByEmail(email);
-    }
 
-	private User convertToDTO(User user) {
-		return new User(user.getId(), user.getUserName(), user.getPassword(), user.getEmail(), user.getRole());
+	@GetMapping("/email/{email}")
+	public User getByEmail(@PathVariable("email") String email) {
+		return userService.getOneByEmail(email);
 	}
+
 }
