@@ -19,12 +19,14 @@ public class GameLinkUserDetails implements UserDetails {
 	
 	private int id;
     private String userName;
+    private String name;
     private String password; 
     private List<GrantedAuthority> authorities;
 
     public GameLinkUserDetails(User user) {
     	id = user.getId();
         userName = user.getEmail();
+        name = user.getUserName();
         password = user.getPassword();
         authorities = Arrays.stream(user.getRole().getName()
                 .split(","))
@@ -69,5 +71,9 @@ public class GameLinkUserDetails implements UserDetails {
     
     public int getId() {
     	return this.id;
+    }
+    
+    public String getName() {
+    	return this.name;
     }
 }
