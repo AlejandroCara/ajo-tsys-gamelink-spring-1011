@@ -37,7 +37,7 @@ public class PartyController {
 
 	@Autowired(required = true)
 	PartyService partyService;
-	
+
 	@Autowired(required = true)
 	UserService userService;
 
@@ -48,10 +48,10 @@ public class PartyController {
 	GameRoleService gameRoleService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Party>> listAllParties(@RequestParam(name = "idGame", required = false) Integer idGame,
+	public ResponseEntity<Page<Party>> listAllParties(@RequestParam(name = "idGame", required = false) Integer idGame,
 			@RequestParam(name = "idTag", required = false) List<Integer> idTag,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-		
+
 		Page<Party> partyPage = null;
 
 		if (idGame != null && idTag != null) {
@@ -64,22 +64,21 @@ public class PartyController {
 			partyPage = partyService.getPaginatedAllParty(PageRequest.of(page, size));
 		}
 
-		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(parties, HttpStatus.OK);
+		return new ResponseEntity<>(partyPage, HttpStatus.OK);
 	}
 
-	//Return a list of the parties owned by the user with the id passed by path variable
+	// Return a list of the parties owned by the user with the id passed by path
+	// variable
 	@GetMapping("/all/user/{idUser}")
-	public ResponseEntity<List<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser,
+	public ResponseEntity<Page<Party>> listAllPartiesByUser(@PathVariable(name = "idUser") int idUser,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		Page<Party> partyPage = partyService.getPaginateAllByUser(PageRequest.of(page, size), idUser);
-		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
-		return new ResponseEntity<>(parties, HttpStatus.OK);
+		return new ResponseEntity<>(partyPage, HttpStatus.OK);
 	}
-	
-	//The logged user is added to the party passed by path variable if its not already in that party
+
+	// The logged user is added to the party passed by path variable if its not
+	// already in that party
 	@PostMapping("/join/{id}")
 	public ResponseEntity joinParty(Authentication authentication, @PathVariable(name = "id") int id) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
@@ -87,23 +86,24 @@ public class PartyController {
 		Party party = partyService.getOne(id);
 		GameRole gameRole = gameRoleService.getOne(3);
 		boolean isAlreadyMember = false;
-		
+
 		for (UserPartyGameRole member : party.getUserPartyGameRoles()) {
-			if(member.getUser().getId() == user.getId()) {
+			if (member.getUser().getId() == user.getId()) {
 				isAlreadyMember = true;
 			}
 		}
-		
-		if(!isAlreadyMember) {
+
+		if (!isAlreadyMember) {
 			userPartyGameRoleService.add(new UserPartyGameRole(user, party, gameRole));
 		} else {
 			return new ResponseEntity(HttpStatus.CONFLICT);
 		}
-		
+
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
-	//The logged user is removed to from the party passed by path variable if its in the party
+
+	// The logged user is removed to from the party passed by path variable if its
+	// in the party
 	@PostMapping("/leave/{id}")
 	public ResponseEntity leaveParty(Authentication authentication, @PathVariable(name = "id") int id) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
@@ -112,49 +112,48 @@ public class PartyController {
 		GameRole gameRole = gameRoleService.getOne(3);
 		boolean isMember = false;
 		int userPartyGameRoleId = 0;
-		
+
 		for (UserPartyGameRole member : party.getUserPartyGameRoles()) {
-			if(member.getUser().getId() == user.getId()) {
+			if (member.getUser().getId() == user.getId()) {
 				isMember = true;
 				userPartyGameRoleId = member.getId();
 			}
 		}
-		
-		if(isMember) {
+
+		if (isMember) {
 			userPartyGameRoleService.deleteOne(userPartyGameRoleId);
 		} else {
 			return new ResponseEntity(HttpStatus.CONFLICT);
 		}
-		
+
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
-	//Return a list of the parties owned by the logged user contained in the token
+
+	// Return a list of the parties owned by the logged user contained in the token
 	@GetMapping("/own")
-	public ResponseEntity<List<Party>> listOwnParties(Authentication authentication,
+	public ResponseEntity<Page<Party>> listOwnParties(Authentication authentication,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		Page<Party> partyPage = partyService.getPaginateAllByUser(PageRequest.of(page, size), ud.getId());
-		List<Party> parties = partyPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
 
-		return new ResponseEntity<>(parties, HttpStatus.OK);
+		return new ResponseEntity<>(partyPage, HttpStatus.OK);
 	}
-	
-	//Saves the party from the body of the request with the logged user as owner
+
+	// Saves the party from the body of the request with the logged user as owner
 	@PostMapping("/add")
 	public Party saveParty(Authentication authentication, @RequestBody Party party) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		party.setOwner(userService.getOneById(ud.getId()));
 		return partyService.add(party);
 	}
-	
-	//Return a party with the same id passed by path variable
+
+	// Return a party with the same id passed by path variable
 	@GetMapping("/id/{id}")
 	public Party getOneParty(@PathVariable(name = "id") int id) {
 		return partyService.getOne(id);
 	}
 
-	//Saves the changes of the party from request's body
+	// Saves the changes of the party from request's body
 	@PutMapping("/{id}")
 	public Party updateParty(@PathVariable(name = "id") int id, @RequestBody Party party) {
 
@@ -172,54 +171,51 @@ public class PartyController {
 
 		return newParty;
 	}
-	
-	//Saves the changes of the party from request's body if is sent by its owner
+
+	// Saves the changes of the party from request's body if is sent by its owner
 	@PutMapping("/own/update/{id}")
-	public ResponseEntity updateOwnParty(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody Party party) {
+	public ResponseEntity updateOwnParty(Authentication authentication, @PathVariable(name = "id") int id,
+			@RequestBody Party party) {
 
 		Party preParty = new Party();
 
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		preParty = partyService.getOne(id);
 		System.out.println(preParty.getOwner().getId());
-		if(preParty.getOwner().getId() == ud.getId()) {
+		if (preParty.getOwner().getId() == ud.getId()) {
 			preParty.setName(party.getName());
 			preParty.setDescription(party.getDescription());
 			preParty.setMaxPlayers(party.getMaxPlayers());
 
 			partyService.update(preParty);
-		}  else {
+		} else {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
-	
-	//Delete the party with the id passed by path variable if the request is sent by its owner
+
+	// Delete the party with the id passed by path variable if the request is sent
+	// by its owner
 	@DeleteMapping("/own/delete/{id}")
 	public ResponseEntity deleteOwnParty(Authentication authentication, @PathVariable(name = "id") int id) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
-		if(ud.getId() == partyService.getOne(id).getOwner().getId()) {
+		if (ud.getId() == partyService.getOne(id).getOwner().getId()) {
 			partyService.deleteOne(id);
 		} else {
 			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		return new ResponseEntity(HttpStatus.OK);
-	}	
-	
-	//Delete the party with the id passed by path variable
-	@DeleteMapping("/delete/{id}")
-	public void deleteParty(Authentication authentication, @PathVariable(name = "id") int id) {
-			partyService.deleteOne(id);
-	}
-	
-	@GetMapping("/members/{id}")
-	public List<UserPartyGameRole> getMembers(@PathVariable(name = "id") int id) {	
-		return partyService.getOne(id).getUserPartyGameRoles();
 	}
 
-	private Party convertToDTO(Party party) {
-		return new Party(party.getId(), party.getName(), party.getMaxPlayers(), party.getDescription(), party.getGame(),
-				party.getOwner(), party.getTag());
+	// Delete the party with the id passed by path variable
+	@DeleteMapping("/delete/{id}")
+	public void deleteParty(Authentication authentication, @PathVariable(name = "id") int id) {
+		partyService.deleteOne(id);
+	}
+
+	@GetMapping("/members/{id}")
+	public List<UserPartyGameRole> getMembers(@PathVariable(name = "id") int id) {
+		return partyService.getOne(id).getUserPartyGameRoles();
 	}
 
 }

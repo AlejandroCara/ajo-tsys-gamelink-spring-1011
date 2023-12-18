@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,11 +27,10 @@ public class TagController {
 	TagService tagService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Tag>> listAllTags(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Page<Tag>> listAllTags(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
 		Page<Tag> tagPage = tagService.getPaginateAll(PageRequest.of(page, size));
-		List<Tag> result = tagPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return new ResponseEntity<>(tagPage, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -66,10 +62,6 @@ public class TagController {
 	@DeleteMapping("/{id}")
 	public void deleteTag(@PathVariable(name = "id") int id) {
 		tagService.deleteOne(id);
-	}
-
-	private Tag convertToDTO(Tag tag) {
-		return new Tag(tag.getId(), tag.getName(), tag.getDescription(), tag.getParty());
 	}
 
 }
