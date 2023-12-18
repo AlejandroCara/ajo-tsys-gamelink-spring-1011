@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ public class User {
 	private int id;
 	@Column(name = "username")
 	private String userName;
-	@JsonIgnore
+	@Hidden
 	private String password;
 	private String email;
 	
