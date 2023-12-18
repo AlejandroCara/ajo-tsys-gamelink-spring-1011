@@ -50,7 +50,7 @@ public class GameController {
 		return gameService.add(game);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping("/id/{id}")
 	public Game getOneGame(@PathVariable(name = "id") int id) {
 		return gameService.getOne(id);
 	}
