@@ -4,7 +4,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,13 +33,11 @@ public class GameController {
 	GameService gameService;
 
 	@GetMapping("/paged")
-	public ResponseEntity<List<Game>> listAllGamesPaginated(@RequestParam(defaultValue = "0") int page,
+	public ResponseEntity<Page<Game>> listAllGamesPaginated(@RequestParam(defaultValue = "0") int page,
 													@RequestParam(defaultValue = "10") int size) {
 		Page<Game> departamentoPage = gameService.getPaginatedGames(PageRequest.of(page, size));
-		List<Game> departamentoDTOs = departamentoPage.getContent().stream()
-				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(departamentoDTOs, HttpStatus.OK);
+		return new ResponseEntity<>(departamentoPage, HttpStatus.OK);
 	}
 	
 	@GetMapping("/all")

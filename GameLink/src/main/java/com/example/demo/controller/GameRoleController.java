@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,18 +32,17 @@ public class GameRoleController {
 	GameGameRoleService gameGameRoleService;
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<GameRole>> listAllGameRoles(@RequestParam(name = "idGame", required = false) Integer idGame,
+	public ResponseEntity<Page<GameRole>> listAllGameRoles(@RequestParam(name = "idGame", required = false) Integer idGame,
 														   @RequestParam(defaultValue = "0") int page,
 														   @RequestParam(defaultValue = "10") int size) {
 
 		Page<GameRole> departamentoPage = gameRoleService.getPaginatedGameRole(PageRequest.of(page, size));
-		List<GameRole> departamentoDTOs = departamentoPage.getContent().stream().collect(Collectors.toList());
 		
 		if (idGame != null) {
-			departamentoDTOs = gameRoleService.findGameRoleByGameId(idGame);
+			departamentoPage = gameRoleService.findGameRoleByGameId(PageRequest.of(page, size),idGame);
 		}
 
-		return new ResponseEntity<>(departamentoDTOs, HttpStatus.OK);
+		return new ResponseEntity<>(departamentoPage, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")

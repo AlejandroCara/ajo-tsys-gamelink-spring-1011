@@ -22,7 +22,7 @@ public interface IGameRoleService {
 	
 	Page<GameRole> getPaginatedGameRole(Pageable pageable);
 	
-	List<GameRole> findGameRoleByGameId(int idGame);
+	Page<GameRole> findGameRoleByGameId(Pageable pageable, int idGame);
 	
 
 }

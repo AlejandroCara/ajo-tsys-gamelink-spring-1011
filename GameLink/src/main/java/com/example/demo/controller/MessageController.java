@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import java.sql.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,10 +35,10 @@ public class MessageController {
 
 	@Autowired(required = true)
 	MessageService messageService;
-	
+
 	@Autowired(required = true)
 	PartyService partyService;
-	
+
 	@Autowired(required = true)
 	UserPartyGameRoleService userPartyGameRoleService;
 
@@ -47,7 +46,7 @@ public class MessageController {
 	UserService userService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Message>> listAllMessages(
+	public ResponseEntity<Page<Message>> listAllMessages(
 			@RequestParam(name = "idParty", required = false) Integer idParty,
 			@RequestParam(name = "idUser", required = false) Integer idUser, @RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
@@ -63,38 +62,35 @@ public class MessageController {
 			messagePage = messageService.getPaginatedAllMessage(PageRequest.of(page, size));
 		}
 
-		List<Message> messages = messagePage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(messages, HttpStatus.OK);
+		return new ResponseEntity<>(messagePage, HttpStatus.OK);
 	}
-	
-	
-	//Return the messages of the party passed by path variable if the user who sent the request is a member of that party
+
+	// Return the messages of the party passed by path variable if the user who sent
+	// the request is a member of that party
 	@GetMapping("/party/{id}")
-	public ResponseEntity<List<Message>> listAllMessagerByParty(Authentication authentication, @PathVariable(name = "id") int id,
-																@RequestParam(defaultValue = "0") int page,
-																@RequestParam(defaultValue = "10") int size) {
-		
+	public ResponseEntity<Page<Message>> listAllMessagerByParty(Authentication authentication,
+			@PathVariable(name = "id") int id, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
+
 		Page<Message> messagePage = null;
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		List<UserPartyGameRole> members = userPartyGameRoleService.findByPartyId(id);
 		boolean isMember = false;
-		
-		//Check if the user who sent the request is a member of the party
+
+		// Check if the user who sent the request is a member of the party
 		for (UserPartyGameRole player : members) {
-			if(player.getUser().getId() == ud.getId()) {
+			if (player.getUser().getId() == ud.getId()) {
 				isMember = true;
 			}
 		}
-		
-		//Is the user who sent the request is a member of the party return the messages of that party
+
+		// Is the user who sent the request is a member of the party return the messages
+		// of that party
 		if (isMember) {
 			messagePage = messageService.getPaginatedAllParty(PageRequest.of(page, size), id);
 		}
 
-		List<Message> messages = messagePage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(messages, HttpStatus.OK);
+		return new ResponseEntity<>(messagePage, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -105,24 +101,27 @@ public class MessageController {
 		message.setAuthor(userService.getOneById(ud.getId()));
 		return messageService.add(message);
 	}
-	
-	//Adds a message to the party passed by path variable if the user who sent the request is a member of the party
+
+	// Adds a message to the party passed by path variable if the user who sent the
+	// request is a member of the party
 	@PostMapping("/party/write/{id}")
-	public ResponseEntity addMessage(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody Message message) {
-		
+	public ResponseEntity addMessage(Authentication authentication, @PathVariable(name = "id") int id,
+			@RequestBody Message message) {
+
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		List<UserPartyGameRole> members = userPartyGameRoleService.findByPartyId(id);
 		boolean isMember = false;
-		
-		//Check if the user who sent the request is a member of the party
+
+		// Check if the user who sent the request is a member of the party
 		for (UserPartyGameRole player : members) {
-			if(player.getUser().getId() == ud.getId()) {
+			if (player.getUser().getId() == ud.getId()) {
 				isMember = true;
 				message.setIdParty(player.getParty());
 			}
 		}
-		
-		//Is the user who sent the request is a member of the party return the messages of that party
+
+		// Is the user who sent the request is a member of the party return the messages
+		// of that party
 		if (isMember) {
 			message.setCreated_at(new Date(System.currentTimeMillis()));
 			message.setUpdated_at(new Date(System.currentTimeMillis()));
@@ -138,23 +137,23 @@ public class MessageController {
 	public Message getOneMessage(@PathVariable(name = "id") int id) {
 		return messageService.getOne(id);
 	}
-	
+
 	@GetMapping("/id/{id}")
 	public Message getOwnMessage(Authentication authentication, @PathVariable(name = "id") int id) {
 
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
-		Message msg =  messageService.getOne(id);
-		if(msg.getAuthor().getId() == ud.getId()) {
+		Message msg = messageService.getOne(id);
+		if (msg.getAuthor().getId() == ud.getId()) {
 			return msg;
 		} else {
 			return null;
 		}
-		
+
 	}
 
 	@PutMapping("/{id}")
 	public Message updateMessage(@PathVariable(name = "id") int id, @RequestBody Message message) {
-		
+
 		Message prevMessage = new Message();
 		Message newMessage = new Message();
 
@@ -168,15 +167,16 @@ public class MessageController {
 
 		return newMessage;
 	}
-	
+
 	@PutMapping("/update/{id}")
-	public Message updateOwnMessage(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody Message message) {
+	public Message updateOwnMessage(Authentication authentication, @PathVariable(name = "id") int id,
+			@RequestBody Message message) {
 
 		Message prevMessage = new Message();
 		Message newMessage = new Message();
-		
+
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
-		
+
 		prevMessage = messageService.getOne(id);
 
 		if (prevMessage.getAuthor().getId() == ud.getId()) {
@@ -184,7 +184,7 @@ public class MessageController {
 			prevMessage.setUpdated_at(new Date(System.currentTimeMillis()));
 			newMessage = messageService.update(prevMessage);
 		}
-		
+
 		return newMessage;
 	}
 
@@ -192,7 +192,7 @@ public class MessageController {
 	public void deleteMessage(@PathVariable(name = "id") int id) {
 		messageService.deleteOne(id);
 	}
-	
+
 	@DeleteMapping("/delete/{id}")
 	public void deleteOwnMessage(Authentication authentication, @PathVariable(name = "id") int id) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
@@ -200,11 +200,6 @@ public class MessageController {
 		if (msg.getAuthor().getId() == ud.getId()) {
 			messageService.deleteOne(id);
 		}
-	}
-
-	private Message convertToDTO(Message message) {
-		return new Message(message.getId(), message.getMessage(), message.getCreated_at(), message.getUpdated_at(),
-				message.getAuthor(), message.getIdParty());
 	}
 
 }

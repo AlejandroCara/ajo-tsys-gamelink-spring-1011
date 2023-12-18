@@ -1,8 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,7 +28,7 @@ public class EventController {
 	EventService eventService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<Event>> listAllEvents(@RequestParam(required = false) Integer idGame,
+	public ResponseEntity<Page<Event>> listAllEvents(@RequestParam(required = false) Integer idGame,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
 
 		Page<Event> eventPage = null;
@@ -42,9 +39,7 @@ public class EventController {
 			eventPage = eventService.getPaginatedEvent(PageRequest.of(page, size));
 		}
 
-		List<Event> result = eventPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
-
-		return new ResponseEntity<>(result, HttpStatus.OK);
+		return new ResponseEntity<>(eventPage, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -81,11 +76,6 @@ public class EventController {
 	@DeleteMapping("/{id}")
 	public void deleteEvent(@PathVariable(name = "id") int id) {
 		eventService.deleteOne(id);
-	}
-
-	private Event convertToDTO(Event event) {
-		return new Event(event.getId(), event.getName(), event.getDescription(), event.getStatus(), event.getStart(),
-				event.getEnd(), event.getIdGame(), event.getIdUser());
 	}
 
 }
