@@ -1,8 +1,13 @@
 package com.example.demo.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,17 +31,20 @@ public class EventController {
 	EventService eventService;
 
 	@GetMapping("/all")
-	public List<Event> listAllEvents(@RequestParam(required = false) Integer idGame) {
-		
-		List<Event> result;
-		
+	public ResponseEntity<List<Event>> listAllEvents(@RequestParam(required = false) Integer idGame,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+
+		Page<Event> eventPage = null;
+
 		if (idGame != null) {
-			result = eventService.findByGameId(idGame);
+			eventPage = eventService.getPaginatedEventByGameId(PageRequest.of(page, size), idGame);
 		} else {
-			result = eventService.getAll();
+			eventPage = eventService.getPaginatedEvent(PageRequest.of(page, size));
 		}
-		
-		return result;
+
+		List<Event> result = eventPage.getContent().stream().map(this::convertToDTO).collect(Collectors.toList());
+
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	@PostMapping("/add")
@@ -73,6 +81,11 @@ public class EventController {
 	@DeleteMapping("/{id}")
 	public void deleteEvent(@PathVariable(name = "id") int id) {
 		eventService.deleteOne(id);
+	}
+
+	private Event convertToDTO(Event event) {
+		return new Event(event.getId(), event.getName(), event.getDescription(), event.getStatus(), event.getStart(),
+				event.getEnd(), event.getIdGame(), event.getIdUser());
 	}
 
 }
