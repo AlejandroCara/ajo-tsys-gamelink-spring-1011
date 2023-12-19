@@ -81,14 +81,15 @@ public class PartyController {
 
 	// The logged user is added to the party passed by path variable if its not
 	// already in that party
-	@PostMapping("/join/{id}")//, @RequestBody Party partyd
-	public ResponseEntity joinParty(Authentication authentication, @PathVariable(name = "id") int id) {
+	@PostMapping("/join/{id}")
+	public ResponseEntity joinParty(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody int userPartyGameRoleId) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		System.out.println("Llega");
 		User user = userService.getOneById(ud.getId());
+		UserPartyGameRole userPartyGameRole = userPartyGameRoleService.getOne(userPartyGameRoleId);
 		Party party = partyService.getOne(id);
-		GameRole gameRole = gameRoleService.getOne(3);
 		boolean isAlreadyMember = false;
-
+		
 		for (UserPartyGameRole member : party.getUserPartyGameRoles()) {
 			if (member.getUser() != null && member.getUser().getId() == user.getId()) {
 				isAlreadyMember = true;
@@ -96,7 +97,8 @@ public class PartyController {
 		}
 
 		if (!isAlreadyMember) {
-			//userPartyGameRoleService.add(new UserPartyGameRole(user, party, gameRole));
+			userPartyGameRole.setUser(user);
+			userPartyGameRoleService.update(userPartyGameRole);
 		} else {
 			return new ResponseEntity(HttpStatus.CONFLICT);
 		}
