@@ -3,6 +3,8 @@ package com.example.demo.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
@@ -25,7 +27,7 @@ public class User {
 	private int id;
 	@Column(name = "username")
 	private String userName;
-	@Hidden
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 	private String email;
 	
@@ -35,12 +37,12 @@ public class User {
 	
 	@OneToMany
 	@JoinColumn(name = "id")
-	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<Event> event;
 	
 	@OneToMany
 	@JoinColumn(name = "id_user")
-	@JsonIgnore
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private List<UserPartyGameRole> userPartyGameRoles;
 	
 	public User() {
