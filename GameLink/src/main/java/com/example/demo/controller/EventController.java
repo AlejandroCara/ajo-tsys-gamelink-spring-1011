@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.Event;
+import com.example.demo.dto.User;
+import com.example.demo.security.GameLinkUserDetails;
 import com.example.demo.service.EventService;
+import com.example.demo.service.UserService;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -26,6 +30,9 @@ public class EventController {
 
 	@Autowired(required = true)
 	EventService eventService;
+
+	@Autowired(required = true)
+	UserService userService;
 
 	@GetMapping("/all")
 	public ResponseEntity<Page<Event>> listAllEvents(@RequestParam(required = false) Integer idGame,
@@ -43,7 +50,10 @@ public class EventController {
 	}
 
 	@PostMapping("/add")
-	public Event saveEvent(@RequestBody Event event) {
+	public Event saveEvent(Authentication authentication, @RequestBody Event event) {
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		User user = userService.getOneById(ud.getId());
+		event.setIdUser(user);
 		return eventService.add(event);
 	}
 
