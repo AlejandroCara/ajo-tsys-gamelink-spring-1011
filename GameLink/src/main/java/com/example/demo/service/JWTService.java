@@ -29,8 +29,11 @@ public class JWTService {
     @Value("${spring.jwt.jwtExpirationInMs}")
     private int JWT_EXPIRATION_TIME_IN_MILLISECONDS;
 
-    public String generateToken(String userName){
+    public String generateToken(String userName, String name, int id, String role){
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", id);
+        claims.put("role", role);
+        claims.put("userName", name);
         return tokenCreator(claims, userName);
     }
 
