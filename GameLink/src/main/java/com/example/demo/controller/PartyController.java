@@ -84,7 +84,6 @@ public class PartyController {
 	@PostMapping("/join/{id}")
 	public List<UserPartyGameRole> joinParty(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody int userPartyGameRoleId) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
-		System.out.println("Llega");
 		User user = userService.getOneById(ud.getId());
 		UserPartyGameRole userPartyGameRole = userPartyGameRoleService.getOne(userPartyGameRoleId);
 		Party party = partyService.getOne(id);
@@ -107,28 +106,18 @@ public class PartyController {
 	// The logged user is removed to from the party passed by path variable if its
 	// in the party
 	@PostMapping("/leave/{id}")
-	public ResponseEntity leaveParty(Authentication authentication, @PathVariable(name = "id") int id) {
+	public List<UserPartyGameRole> leaveParty(Authentication authentication, @PathVariable(name = "id") int id, @RequestBody int userPartyGameRoleId) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		User user = userService.getOneById(ud.getId());
+		UserPartyGameRole userPartyGameRole = userPartyGameRoleService.getOne(userPartyGameRoleId);
 		Party party = partyService.getOne(id);
-		GameRole gameRole = gameRoleService.getOne(3);
-		boolean isMember = false;
-		int userPartyGameRoleId = 0;
 
-		for (UserPartyGameRole member : party.getUserPartyGameRoles()) {
-			if (member.getUser().getId() == user.getId()) {
-				isMember = true;
-				userPartyGameRoleId = member.getId();
-			}
+		if (userPartyGameRole.getId() == userPartyGameRoleId) {
+			userPartyGameRole.setUser(null);
+			userPartyGameRoleService.update(userPartyGameRole);
 		}
 
-		if (isMember) {
-			userPartyGameRoleService.deleteOne(userPartyGameRoleId);
-		} else {
-			return new ResponseEntity(HttpStatus.CONFLICT);
-		}
-
-		return new ResponseEntity(HttpStatus.OK);
+		return party.getUserPartyGameRoles();
 	}
 
 	// Return a list of the parties owned by the logged user contained in the token
