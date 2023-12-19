@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,7 +41,6 @@ public class Party {
 
 	@OneToMany
 	@JoinColumn(name = "id_party")
-	@JsonIgnore
 	private List<UserPartyGameRole> userPartyGameRoles;
 
 	@ManyToMany(mappedBy = "party")
@@ -68,6 +70,17 @@ public class Party {
 		this.game = game;
 		this.owner = owner;
 		this.tag = tag;
+	}
+
+	public Party(int id, String name, int maxPlayers, String description, Game game, List<UserPartyGameRole> userPartyGameRoles, User owner) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.maxPlayers = maxPlayers;
+		this.description = description;
+		this.game = game;
+		this.owner = owner;
+		this.userPartyGameRoles = userPartyGameRoles;
 	}
 
 	public int getId() {

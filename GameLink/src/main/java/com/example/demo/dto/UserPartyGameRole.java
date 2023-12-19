@@ -1,5 +1,9 @@
 package com.example.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +26,7 @@ public class UserPartyGameRole {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_party")
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Party party;
 	
 	@ManyToOne
