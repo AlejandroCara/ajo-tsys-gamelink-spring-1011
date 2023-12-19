@@ -129,6 +129,19 @@ public class PartyController {
 
 		return new ResponseEntity<>(partyPage, HttpStatus.OK);
 	}
+	
+	// Return one owned party by id
+	@GetMapping("/own/id/{id}")
+	public Party getOneOwnParty(Authentication authentication, @PathVariable(name = "id") int id) {
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		Party party = null;
+		
+		if(party.getOwner().getId() == ud.getId()) {
+			party = partyService.getOne(id);
+		}
+
+		return party;
+	}
 
 	// Saves the party from the body of the request with the logged user as owner
 	@PostMapping("/add")
