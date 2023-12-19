@@ -30,6 +30,8 @@ import com.example.demo.service.PartyService;
 import com.example.demo.service.UserPartyGameRoleService;
 import com.example.demo.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/party")
@@ -63,7 +65,7 @@ public class PartyController {
 		} else {
 			partyPage = partyService.getPaginatedAllParty(PageRequest.of(page, size));
 		}
-
+		
 		return new ResponseEntity<>(partyPage, HttpStatus.OK);
 	}
 
@@ -144,7 +146,13 @@ public class PartyController {
 	public Party saveParty(Authentication authentication, @RequestBody Party party) {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		party.setOwner(userService.getOneById(ud.getId()));
-		return partyService.add(party);
+		Party savedParty = partyService.add(party);
+		//Creates intermediate table rows to know which roles are needed in the party
+		for(int i = 0; i < savedParty.getUserPartyGameRoles().size(); i++) {
+			savedParty.getUserPartyGameRoles().get(i).setParty(savedParty);
+			userPartyGameRoleService.add(savedParty.getUserPartyGameRoles().get(i));
+		}
+		return savedParty;
 	}
 
 	// Return a party with the same id passed by path variable
@@ -215,6 +223,7 @@ public class PartyController {
 
 	@GetMapping("/members/{id}")
 	public List<UserPartyGameRole> getMembers(@PathVariable(name = "id") int id) {
+		System.out.println(partyService.getOne(id).getUserPartyGameRoles());
 		return partyService.getOne(id).getUserPartyGameRoles();
 	}
 
