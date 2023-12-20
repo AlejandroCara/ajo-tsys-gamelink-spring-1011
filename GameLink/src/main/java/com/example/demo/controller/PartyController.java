@@ -272,5 +272,11 @@ public class PartyController {
 		System.out.println(partyService.getOne(id).getUserPartyGameRoles());
 		return partyService.getOne(id).getUserPartyGameRoles();
 	}
+	
+	@GetMapping("/joined")
+	public List<Party> getJoinedParties(Authentication authentication) {
+		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
+		return partyService.findByJoinedUserId(ud.getId());
+	}
 
 }
