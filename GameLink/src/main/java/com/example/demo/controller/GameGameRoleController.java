@@ -43,6 +43,11 @@ public class GameGameRoleController {
 	public GameGameRole getOneGameGameRoleByIdGame(@PathVariable(name = "id") int id) {
 		return gameGameRoleService.findByIdGameId(id);
 	}
+	
+	@GetMapping("/allByIdGameRole/{id}")
+	public List<GameGameRole> getAllGameGameRoleByIdGame(@PathVariable(name = "id") int id) {
+		return gameGameRoleService.findByIdGameRoleId(id);
+	}
 
 	@PutMapping("/{id}")
 	public GameGameRole updateGameGameRole(@PathVariable(name = "id") int id, @RequestBody GameGameRole gameGameRole) {
