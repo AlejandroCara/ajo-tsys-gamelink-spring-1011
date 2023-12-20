@@ -184,24 +184,25 @@ public class PartyController {
 
 	// Saves the changes of the party from request's body if is sent by its owner
 	@PutMapping("/own/update/{id}")
-	public ResponseEntity updateOwnParty(Authentication authentication, @PathVariable(name = "id") int id,
+	public Party updateOwnParty(Authentication authentication, @PathVariable(name = "id") int id,
 			@RequestBody Party party) {
 
 		Party preParty = new Party();
+		Party newParty = new Party();
 
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		preParty = partyService.getOne(id);
-		System.out.println(preParty.getOwner().getId());
+
 		if (preParty.getOwner().getId() == ud.getId()) {
 			preParty.setName(party.getName());
 			preParty.setDescription(party.getDescription());
 			preParty.setMaxPlayers(party.getMaxPlayers());
+			preParty.setUserPartyGameRoles(party.getUserPartyGameRoles());
 
-			partyService.update(preParty);
-		} else {
-			return new ResponseEntity(HttpStatus.FORBIDDEN);
-		}
-		return new ResponseEntity(HttpStatus.OK);
+			newParty = partyService.update(preParty);
+		} 
+		
+		return newParty;
 	}
 
 	// Delete the party with the id passed by path variable if the request is sent
@@ -211,8 +212,6 @@ public class PartyController {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		if (ud.getId() == partyService.getOne(id).getOwner().getId()) {
 			partyService.deleteOne(id);
-		} else {
-			return new ResponseEntity(HttpStatus.FORBIDDEN);
 		}
 		return new ResponseEntity(HttpStatus.OK);
 	}
