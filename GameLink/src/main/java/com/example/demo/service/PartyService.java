@@ -81,4 +81,9 @@ public class PartyService implements IPartyService {
 		iPartyDAO.deleteById(id);
 	}
 
+	@Override
+	public List<Party> findByJoinedUserId(int itUser) {
+		return iPartyDAO.findByJoinedUserId(itUser);
+	}
+
 }
