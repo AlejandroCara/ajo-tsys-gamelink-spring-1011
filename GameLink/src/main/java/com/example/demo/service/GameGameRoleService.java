@@ -40,8 +40,8 @@ public class GameGameRoleService implements IGameGameRoleService {
 	}
 
 	@Override
-	public GameGameRole findByIdGameRoleId(int idGameRole) {
-		return iGameGameRoleDAO.findByIdGameRoleId(idGameRole).get();
+	public List<GameGameRole> findByIdGameRoleId(int idGameRole) {
+		return iGameGameRoleDAO.findByIdGameRoleId(idGameRole);
 	}
 
 	@Override
@@ -49,7 +49,9 @@ public class GameGameRoleService implements IGameGameRoleService {
 		return iGameGameRoleDAO.findByIdGameId(idGame).get();
 	}
 
-
-
+	@Override
+	public GameGameRole findByIdGameIdAndIdGameRoleId(int idGame, int idGameRole) {
+		return iGameGameRoleDAO.findByIdGameIdAndIdGameRoleId(idGame, idGameRole).get();
+	}
 
 }

@@ -75,7 +75,6 @@ public class GameRole {
 	/**
 	 * @return the gameGameRole
 	 */
-	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "GameGameRole")
 	public List<GameGameRole> getGameGameRole() {
 		return gameGameRole;
