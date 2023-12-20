@@ -76,11 +76,14 @@ public class MessageController {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		List<UserPartyGameRole> members = userPartyGameRoleService.findByPartyId(id);
 		boolean isMember = false;
+		int i = 0; 
 
 		// Check if the user who sent the request is a member of the party
-		for (UserPartyGameRole player : members) {
-			if (player.getUser() != null && player.getUser().getId() == ud.getId()) {
+		while(!isMember && i < members.size()) {
+			if (members.get(i).getUser() != null && members.get(i).getUser().getId() == ud.getId()) {
 				isMember = true;
+			} else {
+				i++;
 			}
 		}
 
@@ -111,12 +114,16 @@ public class MessageController {
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		List<UserPartyGameRole> members = userPartyGameRoleService.findByPartyId(id);
 		boolean isMember = false;
+		int i = 0; 
+
 
 		// Check if the user who sent the request is a member of the party
-		for (UserPartyGameRole player : members) {
-			if (player.getUser() != null && player.getUser().getId() == ud.getId()) {
+		while(!isMember && i < members.size()) {
+			if (members.get(i).getUser() != null && members.get(i).getUser().getId() == ud.getId()) {
 				isMember = true;
-				message.setIdParty(player.getParty());
+				message.setIdParty(members.get(i).getParty());
+			} else {
+				i++;
 			}
 		}
 
