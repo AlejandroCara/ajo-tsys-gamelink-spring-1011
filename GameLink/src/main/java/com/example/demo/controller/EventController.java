@@ -76,7 +76,6 @@ public class EventController {
 		prevEvent.setStart(event.getStart());
 		prevEvent.setEnd(event.getEnd());
 		prevEvent.setIdGame(event.getIdGame());
-		prevEvent.setIdUser(event.getIdUser());
 
 		newEvent = eventService.update(prevEvent);
 
