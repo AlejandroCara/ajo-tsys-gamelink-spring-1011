@@ -66,19 +66,45 @@ public class GameRoleController {
 
 		GameRole preGameRole = new GameRole();
 		GameRole newGameRole = new GameRole();
-		GameGameRole newgameGameRole = new GameGameRole();
 		preGameRole = gameRoleService.getOne(id);
 
 		preGameRole.setIcon_url(gameRole.getIcon_url());
 		preGameRole.setName(gameRole.getName());
 		preGameRole.setDescription(gameRole.getDescription());
 
-		for (int i = 0; i < gameRole.getGameGameRole().size(); i++) {
+		int preGameGameRoleId = 0;
+		int inGameGameRoleId = 0;
+		int i = 0;
+		int j = 0;
+		boolean roleFound = false;
 
-			newgameGameRole.setIdGame(gameRole.getGameGameRole().get(i).getIdGame());
-			newgameGameRole.setIdGameRole(newGameRole);
-			gameGameRoleService.add(newgameGameRole);
+		while (i < preGameRole.getGameGameRole().size()) {
 
+			preGameGameRoleId = preGameRole.getGameGameRole().get(i).getIdGame().getId();
+			roleFound = false;
+			j = 0;
+
+			while (!roleFound && j < gameRole.getGameGameRole().size()) {
+				inGameGameRoleId = gameRole.getGameGameRole().get(j).getIdGame().getId();
+				if (preGameGameRoleId == inGameGameRoleId) {
+					roleFound = true;
+				} else {
+					j++;
+				}
+			}
+
+			if (roleFound) {
+				gameRole.getGameGameRole().remove(j);
+				i++;
+			} else {
+
+				gameGameRoleService.deleteOne(preGameRole.getGameGameRole().get(i).getId());
+				preGameRole.getGameGameRole().remove(i);
+			}
+		}
+
+		for (i = 0; i < gameRole.getGameGameRole().size(); i++) {
+			gameGameRoleService.add(new GameGameRole(gameRole.getGameGameRole().get(i).getIdGame(), newGameRole, 1));
 		}
 
 		newGameRole = gameRoleService.update(preGameRole);
