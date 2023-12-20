@@ -189,18 +189,69 @@ public class PartyController {
 
 		Party preParty = new Party();
 		Party newParty = new Party();
-
+		System.out.println("UPDATE PARTY");
 		GameLinkUserDetails ud = (GameLinkUserDetails) authentication.getPrincipal();
 		preParty = partyService.getOne(id);
+		System.out.println("gamerole "+party.getUserPartyGameRoles().get(0).getGameRole().getName());
 
 		if (preParty.getOwner().getId() == ud.getId()) {
 			preParty.setName(party.getName());
 			preParty.setDescription(party.getDescription());
 			preParty.setMaxPlayers(party.getMaxPlayers());
-			preParty.setUserPartyGameRoles(party.getUserPartyGameRoles());
+			//preParty.setUserPartyGameRoles(party.getUserPartyGameRoles());
+			
+			int prePartyGameRoleId = 0;
+			int inPartyGameRoleId = 0;
+			int i = 0;
+			int j = 0;
+			boolean roleFound = false;
+			
+			//For this context updated party means the party received in requestBody from front
+			//Navigate throught the userPartyGameRoles of the saved party
+			while(i < preParty.getUserPartyGameRoles().size()) {
+				
+				//Get que id of the role in the saved party and reset while variables
+				prePartyGameRoleId = preParty.getUserPartyGameRoles().get(i).getGameRole().getId();
+				roleFound = false;
+				j = 0;
+				
+				//See if the same role is in the updated party
+				while(!roleFound && j < party.getUserPartyGameRoles().size()) {
+					inPartyGameRoleId = party.getUserPartyGameRoles().get(j).getGameRole().getId();
+					if(prePartyGameRoleId == inPartyGameRoleId) {
+						roleFound = true;
+					} else {
+						j++;
+					}
+				}
+				
+				/*If the role is in the updated party keep that role in the saved party untouched,
+				 * remove it from the updated party and increase the index to get the next role in the saved party*/
+				if(roleFound) {
+					party.getUserPartyGameRoles().remove(j);
+					System.out.println("Se queda el rol " + preParty.getUserPartyGameRoles().get(i).getGameRole().getName());
+					i++;
+				} else {
+					/*Otherwise that means that role has been removed in the updated party so need to be removed
+					 *from the saved party and don't increase the index so when the role is removed the nex will replace
+					 *the index of the removed one*/
+					System.out.println("remove from preparty " + preParty.getUserPartyGameRoles().get(i).getGameRole().getName());
+					userPartyGameRoleService.deleteOne(preParty.getUserPartyGameRoles().get(i).getId());
+					preParty.getUserPartyGameRoles().remove(i);
+				}
+				
+			}
+			
+			//At this point in the updated party only remains the roles that weren't already in the saved party
+			for(i = 0; i < party.getUserPartyGameRoles().size(); i++) {
+				System.out.println("Añadir rol " + party.getUserPartyGameRoles().get(i).getGameRole().getName());
+				userPartyGameRoleService.add(new UserPartyGameRole(null, preParty, party.getUserPartyGameRoles().get(i).getGameRole()));
+			}
+				
+				
+		}
 
-			newParty = partyService.update(preParty);
-		} 
+		newParty = partyService.update(preParty);
 		
 		return newParty;
 	}
