@@ -66,7 +66,6 @@ public class GameRoleController {
 
 		GameRole preGameRole = new GameRole();
 		GameRole newGameRole = new GameRole();
-		GameGameRole pregameGameRole = new GameGameRole();
 		GameGameRole newgameGameRole = new GameGameRole();
 		preGameRole = gameRoleService.getOne(id);
 
@@ -75,14 +74,10 @@ public class GameRoleController {
 		preGameRole.setDescription(gameRole.getDescription());
 
 		for (int i = 0; i < gameRole.getGameGameRole().size(); i++) {
-			pregameGameRole = gameGameRoleService
-					.findByIdGameIdAndIdGameRoleId(gameRole.getGameGameRole().get(i).getIdGame().getId(), id);
 
-			if (pregameGameRole != null) {
-				newgameGameRole.setIdGame(gameRole.getGameGameRole().get(i).getIdGame());
-				newgameGameRole.setIdGameRole(newGameRole);
-				gameGameRoleService.add(newgameGameRole);
-			}
+			newgameGameRole.setIdGame(gameRole.getGameGameRole().get(i).getIdGame());
+			newgameGameRole.setIdGameRole(newGameRole);
+			gameGameRoleService.add(newgameGameRole);
 
 		}
 
