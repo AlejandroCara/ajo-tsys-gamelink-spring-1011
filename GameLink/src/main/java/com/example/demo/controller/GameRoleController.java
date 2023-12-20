@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.GameGameRole;
 import com.example.demo.dto.GameRole;
 import com.example.demo.service.GameGameRoleService;
 import com.example.demo.service.GameRoleService;
@@ -24,22 +25,22 @@ import com.example.demo.service.GameRoleService;
 @RestController
 @RequestMapping("/game_role")
 public class GameRoleController {
-	
+
 	@Autowired(required = true)
 	GameRoleService gameRoleService;
-	
+
 	@Autowired(required = true)
 	GameGameRoleService gameGameRoleService;
-	
+
 	@GetMapping("/all")
-	public ResponseEntity<Page<GameRole>> listAllGameRoles(@RequestParam(name = "idGame", required = false) Integer idGame,
-														   @RequestParam(defaultValue = "0") int page,
-														   @RequestParam(defaultValue = "10") int size) {
+	public ResponseEntity<Page<GameRole>> listAllGameRoles(
+			@RequestParam(name = "idGame", required = false) Integer idGame, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size) {
 
 		Page<GameRole> departamentoPage = gameRoleService.getPaginatedGameRole(PageRequest.of(page, size));
-		
+
 		if (idGame != null) {
-			departamentoPage = gameRoleService.findGameRoleByGameId(PageRequest.of(page, size),idGame);
+			departamentoPage = gameRoleService.findGameRoleByGameId(PageRequest.of(page, size), idGame);
 		}
 
 		return new ResponseEntity<>(departamentoPage, HttpStatus.OK);
@@ -47,7 +48,12 @@ public class GameRoleController {
 
 	@PostMapping("/add")
 	public GameRole saveGameRole(@RequestBody GameRole gameRole) {
-		return gameRoleService.add(gameRole);
+		GameRole newGameRole = gameRoleService.add(gameRole);
+		for (int i = 0; i < gameRole.getGameGameRole().size(); i++) {
+			GameGameRole gameGameRole = new GameGameRole(gameRole.getGameGameRole().get(i).getIdGame(), newGameRole, 1);
+			gameGameRoleService.add(gameGameRole);
+		}
+		return newGameRole;
 	}
 
 	@GetMapping("/id/{id}")
@@ -60,12 +66,25 @@ public class GameRoleController {
 
 		GameRole preGameRole = new GameRole();
 		GameRole newGameRole = new GameRole();
-
+		GameGameRole pregameGameRole = new GameGameRole();
+		GameGameRole newgameGameRole = new GameGameRole();
 		preGameRole = gameRoleService.getOne(id);
 
 		preGameRole.setIcon_url(gameRole.getIcon_url());
 		preGameRole.setName(gameRole.getName());
 		preGameRole.setDescription(gameRole.getDescription());
+
+		for (int i = 0; i < gameRole.getGameGameRole().size(); i++) {
+			pregameGameRole = gameGameRoleService
+					.findByIdGameIdAndIdGameRoleId(gameRole.getGameGameRole().get(i).getIdGame().getId(), id);
+
+			if (pregameGameRole != null) {
+				newgameGameRole.setIdGame(gameRole.getGameGameRole().get(i).getIdGame());
+				newgameGameRole.setIdGameRole(newGameRole);
+				gameGameRoleService.add(newgameGameRole);
+			}
+
+		}
 
 		newGameRole = gameRoleService.update(preGameRole);
 
