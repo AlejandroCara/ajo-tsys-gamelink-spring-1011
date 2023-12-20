@@ -94,17 +94,16 @@ public class GameRoleController {
 			}
 
 			if (roleFound) {
-				gameRole.getGameGameRole().remove(j);
+				gameRole.getGameGameRole().remove(j);               
 				i++;
 			} else {
-
 				gameGameRoleService.deleteOne(preGameRole.getGameGameRole().get(i).getId());
 				preGameRole.getGameGameRole().remove(i);
 			}
 		}
 
 		for (i = 0; i < gameRole.getGameGameRole().size(); i++) {
-			gameGameRoleService.add(new GameGameRole(gameRole.getGameGameRole().get(i).getIdGame(), newGameRole, 1));
+			gameGameRoleService.add(new GameGameRole(gameRole.getGameGameRole().get(i).getIdGame(), preGameRole, 1));
 		}
 
 		newGameRole = gameRoleService.update(preGameRole);
