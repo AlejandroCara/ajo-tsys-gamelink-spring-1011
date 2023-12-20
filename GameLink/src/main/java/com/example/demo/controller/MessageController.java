@@ -79,7 +79,7 @@ public class MessageController {
 
 		// Check if the user who sent the request is a member of the party
 		for (UserPartyGameRole player : members) {
-			if (player.getUser().getId() == ud.getId()) {
+			if (player.getUser() != null && player.getUser().getId() == ud.getId()) {
 				isMember = true;
 			}
 		}
@@ -114,7 +114,7 @@ public class MessageController {
 
 		// Check if the user who sent the request is a member of the party
 		for (UserPartyGameRole player : members) {
-			if (player.getUser().getId() == ud.getId()) {
+			if (player.getUser() != null && player.getUser().getId() == ud.getId()) {
 				isMember = true;
 				message.setIdParty(player.getParty());
 			}
