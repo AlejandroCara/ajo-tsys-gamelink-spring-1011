@@ -35,4 +35,6 @@ public interface IPartyService {
 	public Party update(Party party);
 
 	public void deleteOne(int id);
+	
+	public List<Party> findByJoinedUserId(int itUser);
 }

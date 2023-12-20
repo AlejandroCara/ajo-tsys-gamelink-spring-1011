@@ -48,6 +48,7 @@ public class GameLinkSecurityConfig {
 			"/party/join/**", 
 			"/party/leave/**", 
 			"/party/add", 
+			"/party/joined",
 			"/party/own", 
 			"/party/own/id/**", 
 			"/party/own/update/**",
